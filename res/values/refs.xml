@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- booleans.xml - Configuration-dependent settings
+ refs.xml - Configuration-dependent references
  Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
 
  This program is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- True if the application is running in dual-pane mode (eg. on a tablet) -->
-    <item type="bool" name="dualPaned">false</item>
+<resources>
+    <!-- Layout for main activity -->
+    <item name="main" type="layout">@layout/phone_main</item>
 </resources>
