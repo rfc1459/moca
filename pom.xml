@@ -54,6 +54,13 @@
         <gmaps.key />
     </properties>
 
+    <repositories>
+        <repository>
+            <id>com.jakewharton</id>
+            <url>http://r.jakewharton.com/maven/release</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>android</groupId>
@@ -78,6 +85,11 @@
             <artifactId>library</artifactId>
             <version>${abs.version}</version>
             <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>plugin-maps</artifactId>
+            <version>${abs.version}</version>
         </dependency>
         <dependency>
             <groupId>com.viewpagerindicator</groupId>

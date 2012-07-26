@@ -24,8 +24,10 @@ package org.level28.android.moca.ui;
 import org.level28.android.moca.BuildConfig;
 import org.level28.android.moca.R;
 import org.level28.android.moca.bitmaps.NetworkAvatarLoader;
+import org.level28.android.moca.ui.map.MocaMap;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -40,6 +42,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -193,6 +196,17 @@ public class MainActivity extends SherlockFragmentActivity implements
         final MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_map:
+            startActivity(new Intent(this, MocaMap.class));
+            return true;
+        default:
+            return false;
+        }
     }
 
     @Override
