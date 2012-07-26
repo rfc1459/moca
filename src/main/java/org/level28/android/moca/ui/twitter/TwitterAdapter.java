@@ -63,7 +63,7 @@ public class TwitterAdapter extends ItemListAdapter<Tweet, TweetItemView> {
         // Don't ask me why, I've seen it in the wild and it's utterly
         // undocumented...
         view.contents.setText(item.getText().replace("&lt;", "<")
-                .replace("&gt;", ">"));
+                .replace("&gt;", ">").replace("&amp;", "&"));
         avatars.load(view.avatar, item.getProfileImageUrl());
     }
 
