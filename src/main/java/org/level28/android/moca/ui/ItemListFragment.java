@@ -21,10 +21,12 @@ package org.level28.android.moca.ui;
 import java.util.Collections;
 import java.util.List;
 
+import org.level28.android.moca.ExceptionLoader;
 import org.level28.android.moca.R;
 import org.level28.android.moca.util.ViewUtils;
 
 import android.app.Activity;
+import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -38,6 +40,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -208,11 +211,66 @@ public abstract class ItemListFragment<E> extends SherlockFragment implements
         getLoaderManager().restartLoader(loaderId, args, this);
     }
 
+    /**
+     * Get an error message to display for an exception.
+     * 
+     * @param exception
+     * @return a string resource id
+     */
+    protected abstract int getErrorMessage(Exception exception);
+
     @Override
     public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
+        final Exception exception = getException(loader);
+        if (exception != null) {
+            showError(exception, getErrorMessage(exception));
+            showList();
+            return;
+        }
+
         this.items = items;
         getListAdapter().setItems(items.toArray());
         showList();
+    }
+
+    /**
+     * Display a {@link Toast} after an exception occurred in background.
+     * <p>
+     * Subclasses may want to override this method to change the exception
+     * reporting method.
+     * 
+     * @param exception
+     *            the exception thrown by the loader
+     * @param messageResId
+     *            string resource id returned by
+     *            {@link #getErrorMessage(Exception)}
+     */
+    protected void showError(final Exception exception, final int messageResId) {
+        final Activity activity = getActivity();
+        final Application application = activity.getApplication();
+        final String message = activity.getResources().getString(messageResId);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(application, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * Get exception from loader if it provides one by being a
+     * {@link ThrowableLoader}
+     * 
+     * @param loader
+     * @return exception or null if none provided
+     */
+    protected Exception getException(final Loader<List<E>> loader) {
+        if (loader instanceof ExceptionLoader) {
+            return ((ExceptionLoader<List<E>>) loader).clearException();
+        } else {
+            return null;
+        }
     }
 
     /**

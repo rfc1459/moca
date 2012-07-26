@@ -117,4 +117,11 @@ public class HomeFragment extends ItemListFragment<HomeSection> {
                 .getLayoutInflater(), items.toArray(new HomeSection[items.size()]));
     }
     // @formatter:on
+
+    @Override
+    protected int getErrorMessage(Exception exception) {
+        // This fragment does not use an ExceptionLoader, so this method is a
+        // no-op
+        return 0;
+    }
 }

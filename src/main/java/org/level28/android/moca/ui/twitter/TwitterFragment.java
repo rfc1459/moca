@@ -27,8 +27,8 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
-import org.level28.android.moca.AsyncLoader;
 import org.level28.android.moca.BuildConfig;
+import org.level28.android.moca.ExceptionLoader;
 import org.level28.android.moca.R;
 import org.level28.android.moca.json.JsonDeserializerException;
 import org.level28.android.moca.json.TwitterSearchDeserializer;
@@ -51,6 +51,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 /**
  * The awesome MOCA Twitter stream.
@@ -125,37 +126,30 @@ public class TwitterFragment extends ItemListFragment<Tweet> {
 
     @Override
     public Loader<List<Tweet>> onCreateLoader(int id, Bundle args) {
-        return new AsyncLoader<List<Tweet>>(getActivity()) {
+        final List<Tweet> emptyList = Collections.emptyList();
+        return new ExceptionLoader<List<Tweet>>(getActivity(), emptyList) {
             @Override
-            public List<Tweet> loadInBackground() {
+            public List<Tweet> performLoad() throws Exception {
                 if (BuildConfig.DEBUG) {
                     Log.v(LOG_TAG, "loadInBackground+");
                 }
 
                 List<Tweet> result = Collections.emptyList();
 
-                try {
-                    if ("".equals(TWITTER_SEARCH_URL)) {
-                        throw new IOException(
-                                "TWITTER_SEARCH_URL is empty, please nag the author at morpheus@level28.org");
-                    }
-                    TwitterSearchDeserializer jsonParser = new TwitterSearchDeserializer();
+                if ("".equals(TWITTER_SEARCH_URL)) {
+                    throw new IOException(
+                            "TWITTER_SEARCH_URL is empty, please nag the author at morpheus@level28.org");
+                }
+                TwitterSearchDeserializer jsonParser = new TwitterSearchDeserializer();
 
-                    HttpRequest request = HttpRequest
-                            .get(TWITTER_SEARCH_URL)
-                            .userAgent(SyncService.buildUserAgent(getContext()))
-                            .acceptGzipEncoding().uncompress(true);
+                HttpRequest request = HttpRequest.get(TWITTER_SEARCH_URL)
+                        .userAgent(SyncService.buildUserAgent(getContext()))
+                        .acceptGzipEncoding().uncompress(true);
 
-                    if (request.ok()) {
-                        TwitterSearchReply searchReply = jsonParser
-                                .fromInputStream(request.stream());
-                        result = searchReply.getResults();
-                    }
-                } catch (JsonDeserializerException e) {
-                    Log.e(LOG_TAG,
-                            "Internal error while parsing Twitter reply", e);
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Failed to fetch tweets", e);
+                if (request.ok()) {
+                    TwitterSearchReply searchReply = jsonParser
+                            .fromInputStream(request.stream());
+                    result = searchReply.getResults();
                 }
 
                 if (BuildConfig.DEBUG) {
@@ -189,4 +183,19 @@ public class TwitterFragment extends ItemListFragment<Tweet> {
                 activity.avatarLoader());
     }
     // @formatter:on
+
+    @Override
+    protected int getErrorMessage(Exception exception) {
+        // Assume a network error as a safe default
+        int resId = R.string.network_error;
+        if (exception instanceof JsonDeserializerException) {
+            // TODO: specific toast for JSON errors (does it matter to the end
+            // user?)
+        } else if (exception instanceof IOException) {
+            // TODO: specific toast for I/O errors (likewise)
+        } else if (exception instanceof HttpRequestException) {
+            // TODO: specific toast for HTTP errors (ditto)
+        }
+        return resId;
+    }
 }

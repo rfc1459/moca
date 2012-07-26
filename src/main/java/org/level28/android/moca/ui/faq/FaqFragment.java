@@ -141,4 +141,11 @@ public class FaqFragment extends ItemListFragment<FaqEntry> {
         return new FaqAdapter(R.layout.faq_list_item, getActivity()
                 .getLayoutInflater(), items.toArray(new FaqEntry[items.size()]));
     }
+
+    @Override
+    protected int getErrorMessage(Exception exception) {
+        // This fragment does not use an ExceptionLoader, so this method is a
+        // no-op
+        return 0;
+    }
 }
