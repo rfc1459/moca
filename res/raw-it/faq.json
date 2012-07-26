@@ -1,0 +1,71 @@
+[
+  {
+    "category": "in generale",
+    "faqs": [
+      {
+        "q": "Il camp è veramente gratuito o c'è la fregatura?",
+        "a": "Il camp è totalmente gratuito. Per far fronte alle spese, qualche olografico (ben riconoscibile, non vi preoccupate) vi chiederà una sottoscrizione volontaria all'ingresso, e lì starà al vostro buon cuore."
+      },
+      {
+        "q": "Posso dare una mano ad organizzare il MOCA?",
+        "a": "Certo, puoi contattarci via email su <a href=\"mailto:moca@olografix.org\">moca@olografix.org</a> o comunicare la tua disponibilità direttamente all'atto del riempimento del <a href=\"http://moca.olografix.org/moca2012/pages/subscribe?lang=it\">modulo d'iscrizione</a>."
+      },
+      {
+        "q": "La registrazione è importante o posso farne a meno?",
+        "a": "La registrazione ci serve per dimensionare i servizi del camp, quindi se sei intenzionato a partecipare è molto utile che tu ti iscriva."
+      }
+    ]
+  },
+  {
+    "category": "tempistica",
+    "faqs": [
+      {
+        "q": "Quando posso arrivare al MOCA? Posso restare un altro po'?",
+        "a": "Il camp comincia giovedì mattina con l'accoglienza, ma è possibile arrivare già da mercoledì sera in modo da darci una mano con gli ultimi preparativi :) Il camp finisce domenica sera ma sarà comunque possibile passare lì la notte e ripartire il giorno dopo."
+      },
+      {
+        "q": "Ci saranno orari durante il camp?",
+        "a": "Solo quelli biologici :) Naturalmente ad una certa ora della notte i cancelli verranno chiusi. Sarà comunque possibile uscire/entrare dal camp avvertendo uno degli olografici di turno."
+      }
+    ]
+  },
+  {
+    "category": "spazi e logistica",
+    "faqs": [
+      {
+        "q": "Posso portare il mio camper? La moto? Il carro armato?",
+        "a": "All'interno del camp non sarà possibile portare mezzi di nessun tipo, siamo in un parco e dobbiamo rispettare la natura che ci circonda. Naturalmente in zona c'è la possibilità di parcheggiare i vostri mezzi ad una distanza decente dal luogo di svolgimento del camp."
+      },
+      {
+        "q": "Ci sarà da mangiare o devo venire già mangiato?",
+        "a": "Ci saranno dei punti di ristorazione dove potrai comprare del cibo e delle bevande, inoltre Pescara è piena di ristoranti e supermercati dove rifornirsi di cibarie."
+      },
+      {
+        "q": "Posso portare il cane?",
+        "a": "Se porti anche la paletta non c'è problema :)"
+      },
+      {
+        "q": "Per quanto riguarda i fuochi? Posso accenderne?",
+        "a": "Non sarà assolutamente possibile accendere fuochi all'interno del camp."
+      }
+    ]
+  },
+  {
+    "category": "infrastrutture",
+    "faqs": [
+      {
+        "q": "C'è la corrente?",
+        "a": "Certo, ma è vivamente consigliato portarsi ciabatte, adattatori, prolunga da 3 mt, lampadina \"da muratore\" per la notte, e tutto ciò che vi puo' servire."
+      },
+      {
+        "q": "Ci sarà una connessione ad internet? Di che tipo?",
+        "a": "Sì, i dettagli appena disponibili."
+      },
+      {
+        "q": "E per quanto riguarda la LAN?",
+        "a": "Tutto il camp sarà coperto da una wireless LAN, inoltre allestiremo dei punti con attacchi alla rete ethernet. Oltre alle schede di rete è comunque consigliato procurarsi patch di cavo ethernet (se vi possono servire)."
+      }
+    ]
+  }
+]
+

@@ -1,0 +1,70 @@
+[
+  {
+    "category": "general",
+    "faqs": [
+      {
+        "q": "Is the camp really free or there's the catch?",
+        "a": "The camp is totally free. Just to face the expenses, some Olographic (easily recognizable, don't worry) will ask you a voluntary subscription at the entry. Then, it will depend only on your kindness."
+      },
+      {
+        "q": "Can I help organize the MOCA?",
+        "a": "Sure, you can contact us via email at <a href=\"mailto:moca@olografix.org\">moca@olografix.org</a> or give your availability when filling the <a href=\"http://moca.olografix.org/moca2012/pages/subscribe?lang=en\">subscription form</a>."
+      },
+      {
+        "q": "Is the subscription required or can I just skip it?",
+        "a": "The subscription helps us to well-size the camp's services, so if you want to participate, it's very useful that you do that."
+      }
+    ]
+  },
+  {
+    "category": "schedule",
+    "faqs": [
+      {
+        "q": "When can I arrive to the MOCA? Can I stay a little more?",
+        "a": "The camp will start on friday 24 in the morning with the acceptance, but you can also get here wednesday in the evening, in order to help us with the final organization :) The camp will end on sunday 26, but you can stay there overnight and leave later in the morning."
+      },
+      {
+        "q": "There will be schedules during the camp?",
+        "a": "Only biological ones :) But of course the gates of the camp will be closed during the night. Anyway, you can leave and enter the camp contacting one of the Olographics on duty."
+      }
+    ]
+  },
+  {
+    "category": "spaces and logistics",
+    "faqs": [
+      {
+        "q": "Can I bring my camper? My motorbike? My tank?",
+        "a": "You can't bring any vehicle inside the camp. We are in a park, then we have to respect the nature surrounding us. Of course you can park your vehicles near the camp."
+      },
+      {
+        "q": "There will be food or shall I come with my own?",
+        "a": "There will be refreshments where you can buy food and drinks. Moreover Pescara is full of restaurants and markets where you can buy foodstuffs."
+      },
+      {
+        "q": "Can I bring my dog?",
+        "a": "If you bring the pooper-scooper too, no problem :)"
+      },
+      {
+        "q": "What about camp fires? Can I light any?",
+        "a": "It will be absolutely prohibited to light fires inside the camp."
+      }
+    ]
+  },
+  {
+    "category": "infrastructures",
+    "faqs": [
+      {
+        "q": "There will be electricity?",
+        "a": "Sure, but you'd better bring your own power strips, adapters, extension cords, lamps for the night, and anything else you may need."
+      },
+      {
+        "q": "There will be internet connection? What kind?",
+        "a": "Yes, more details when available."
+      },
+      {
+        "q": "What about the LAN?",
+        "a": "The whole camp will be covered by a wireless LAN. Moreover, we will set up ethernet connectors. You'd also better bring your own ethernet cables (if needed)."
+      }
+    ]
+  }
+]

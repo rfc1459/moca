@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ strings.xml - String resources for MOCA app
+ Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- DO NOT override the following two strings in localized versions -->
+    <string name="bugsense_key" tools:ignore="MissingTranslation">${bugsense.key}</string>
+    <string name="maps_key" tools:ignore="MissingTranslation">${gmaps.key}</string>
+    <string name="app_name" tools:ignore="MissingTranslation">MOCA</string>
+    <!-- Start localizing from here -->
+    <string name="home">About us</string>
+    <string name="twitter" tools:ignore="MissingTranslation">Twitter</string>
+    <string name="faq" tools:ignore="MissingTranslation">FAQ</string>
+    <string name="partners" tools:ignore="UnusedResources">Partners</string>
+    <string name="map">Map</string>
+    <string name="menu_locate">Enable location</string>
+    <string name="menu_about">About</string>
+    <string name="menu_license">License</string>
+    <string name="menu_support_mx">Support MX</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="no_tweets">No tweets :-(</string>
+</resources>
