@@ -175,12 +175,14 @@ public class TwitterFragment extends ItemListFragment<Tweet> {
         return new Intent(Intent.ACTION_VIEW, Uri.parse(sb.toString()));
     }
 
+    // @formatter:off
     @Override
     protected ItemListAdapter<Tweet, ? extends ItemView> createAdapter(
             List<Tweet> items) {
         final MainActivity activity = (MainActivity) getActivity();
         return new TwitterAdapter(R.layout.tweet_list_item,
-                activity.getLayoutInflater(), items.toArray(new Tweet[items
-                        .size()]), activity.avatarLoader());
+                activity.getLayoutInflater(), items.toArray(new Tweet[items.size()]),
+                activity.avatarLoader());
     }
+    // @formatter:on
 }
