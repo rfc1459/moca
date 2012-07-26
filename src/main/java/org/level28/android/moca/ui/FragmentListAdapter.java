@@ -24,7 +24,7 @@ package org.level28.android.moca.ui;
 import org.level28.android.moca.R;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +43,8 @@ public class FragmentListAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
 
-    public FragmentListAdapter(Context context, final MocaFragmentAdapter adapter) {
-        this.mAdapter = adapter;
+    public FragmentListAdapter(Context context, final ViewPager pager) {
+        this.mAdapter = (MocaFragmentAdapter) pager.getAdapter();
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -65,10 +65,6 @@ public class FragmentListAdapter extends BaseAdapter {
     public CharSequence getItem(int position) {
         // This is a bit counter-intuitive: the list needs the fragment's title, not the fragment itself
         return mAdapter.getPageTitle(position);
-    }
-
-    public Fragment getFragment(int position) {
-        return mAdapter.getItem(position);
     }
 
     /*

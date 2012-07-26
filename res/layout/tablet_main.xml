@@ -35,8 +35,8 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1" />
 
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
+    <org.level28.android.moca.widget.LockedViewPager
+        android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3" />

@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -85,48 +84,52 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         setContentView(R.layout.main);
 
+        // Create a new loader for avatars
         mAvatarLoader = new NetworkAvatarLoader(this);
 
+        // Instantiate a new FragmentPagerAdapter
         mFragmentAdapter = new MocaFragmentAdapter(getSupportFragmentManager(),
                 getResources());
+
+        /*
+         * Both layouts use a ViewPager to host fragments (it's less hacky). The
+         * difference between the two is an implementation detail we're not
+         * interested in here.
+         */
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mFragmentAdapter);
 
         // Check if we're running in dual-pane mode
         mDualPane = getResources().getBoolean(R.bool.dualPaned);
 
         if (mDualPane) {
-            // We do
+            // We do - use a list to select the currently active fragment
             mFragmentList = (ListView) findViewById(R.id.fragmentList);
 
             // Setup the list adapter
-            mFragmentListAdapter = new FragmentListAdapter(this,
-                    mFragmentAdapter);
+            mFragmentListAdapter = new FragmentListAdapter(this, mPager);
             mFragmentList.setAdapter(mFragmentListAdapter);
             mFragmentList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
             if (savedInstanceState != null
                     && savedInstanceState.containsKey(STATE_ACTIVE_POSITION)) {
                 // Restore active position
-                final int position = savedInstanceState
-                        .getInt(STATE_ACTIVE_POSITION);
+                int position = savedInstanceState.getInt(STATE_ACTIVE_POSITION);
                 if (position == ListView.INVALID_POSITION) {
-                    // FIXME: we should default to first element
+                    // Reset position to ground state
                     mFragmentList.setItemChecked(mActivePosition, false);
-                } else {
-                    mFragmentList.setItemChecked(position, true);
-                    displayFragment(position);
+                    position = 0;
                 }
+                mFragmentList.setItemChecked(position, true);
+                mPager.setCurrentItem(position, false);
                 mActivePosition = position;
             } else {
                 // Start from position 0
                 mActivePosition = 0;
                 mFragmentList.setItemChecked(mActivePosition, true);
-                displayFragment(mActivePosition);
             }
         } else {
-            // We don't :-)
-            mPager = (ViewPager) findViewById(R.id.pager);
-            mPager.setAdapter(mFragmentAdapter);
-
+            // We don't, fall back to the less-challenging phone UI :-)
             final TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
             indicator.setViewPager(mPager);
 
@@ -136,6 +139,7 @@ public class MainActivity extends SherlockFragmentActivity implements
                 final int position = savedInstanceState
                         .getInt(STATE_ACTIVE_POSITION);
                 if (position != ListView.INVALID_POSITION) {
+                    // Position updates *MUST* go through the ViewPagerIndicator
                     indicator.setCurrentItem(position);
                 }
             }
@@ -195,13 +199,9 @@ public class MainActivity extends SherlockFragmentActivity implements
     public void onItemClick(AdapterView<?> list, View view, int position,
             long id) {
         mActivePosition = position;
-        displayFragment(position);
-    }
-
-    private void displayFragment(final int fragmentId) {
-        final Fragment fragment = mFragmentListAdapter.getFragment(fragmentId);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, fragment).commit();
+        // Since this method is used only in two-pane mode, we have to update
+        // the ViewPager directly
+        mPager.setCurrentItem(position, true);
     }
 
     /**
