@@ -21,4 +21,7 @@
     <dimen name="font_size_default">14.0sp</dimen>
     <dimen name="font_size_small">12.0sp</dimen>
     <dimen name="twitter_avatar">32dp</dimen>
+    <dimen name="listPreferredItemPaddingLeft">8dip</dimen>
+    <dimen name="listPreferredItemPaddingRight">8dip</dimen>
+    <dimen name="listPreferredItemHeightSmall">48dip</dimen>
 </resources>
