@@ -51,6 +51,10 @@ public class HomeFragment extends ItemListFragment<HomeSection> {
 
     static final String LOG_TAG = "HomeFragment";
 
+    public HomeFragment() {
+        loaderId = 4;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

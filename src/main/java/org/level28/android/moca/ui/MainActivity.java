@@ -30,8 +30,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -44,12 +49,25 @@ import com.viewpagerindicator.TitlePageIndicator;
  * 
  * @author Matteo Panella
  */
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SherlockFragmentActivity implements
+        OnItemClickListener {
+    private static final String STATE_ACTIVE_POSITION = "active_position";
+
     private static final String LOG_TAG = "MainActivity";
 
     private boolean mDualPane;
 
     private NetworkAvatarLoader mAvatarLoader;
+
+    private MocaFragmentAdapter mFragmentAdapter;
+
+    private FragmentListAdapter mFragmentListAdapter;
+
+    private ListView mFragmentList;
+
+    private ViewPager mPager;
+
+    private int mActivePosition = ListView.INVALID_POSITION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,24 +87,90 @@ public class MainActivity extends SherlockFragmentActivity {
 
         mAvatarLoader = new NetworkAvatarLoader(this);
 
+        mFragmentAdapter = new MocaFragmentAdapter(getSupportFragmentManager(),
+                getResources());
+
         // Check if we're running in dual-pane mode
         mDualPane = getResources().getBoolean(R.bool.dualPaned);
 
         if (mDualPane) {
             // We do
-            // TODO!
+            mFragmentList = (ListView) findViewById(R.id.fragmentList);
+
+            // Setup the list adapter
+            mFragmentListAdapter = new FragmentListAdapter(this,
+                    mFragmentAdapter);
+            mFragmentList.setAdapter(mFragmentListAdapter);
+            mFragmentList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+            if (savedInstanceState != null
+                    && savedInstanceState.containsKey(STATE_ACTIVE_POSITION)) {
+                // Restore active position
+                final int position = savedInstanceState
+                        .getInt(STATE_ACTIVE_POSITION);
+                if (position == ListView.INVALID_POSITION) {
+                    // FIXME: we should default to first element
+                    mFragmentList.setItemChecked(mActivePosition, false);
+                } else {
+                    mFragmentList.setItemChecked(position, true);
+                    displayFragment(position);
+                }
+                mActivePosition = position;
+            } else {
+                // Start from position 0
+                mActivePosition = 0;
+                mFragmentList.setItemChecked(mActivePosition, true);
+                displayFragment(mActivePosition);
+            }
         } else {
             // We don't :-)
-            final ViewPager pager = (ViewPager) findViewById(R.id.pager);
-            pager.setAdapter(new MocaFragmentAdapter(
-                    getSupportFragmentManager(), getResources()));
+            mPager = (ViewPager) findViewById(R.id.pager);
+            mPager.setAdapter(mFragmentAdapter);
 
             final TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
-            indicator.setViewPager(pager);
+            indicator.setViewPager(mPager);
+
+            // Synchronize current page with the dual-pane layout
+            if (savedInstanceState != null
+                    && savedInstanceState.containsKey(STATE_ACTIVE_POSITION)) {
+                final int position = savedInstanceState
+                        .getInt(STATE_ACTIVE_POSITION);
+                if (position != ListView.INVALID_POSITION) {
+                    indicator.setCurrentItem(position);
+                }
+            }
         }
 
         if (BuildConfig.DEBUG) {
             Log.v(LOG_TAG, "MainActivity awakened, have fun ;-)");
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mDualPane) {
+            mFragmentList.setOnItemClickListener(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (mDualPane) {
+            mFragmentList.setOnItemClickListener(null);
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mDualPane) {
+            if (mActivePosition != ListView.INVALID_POSITION) {
+                outState.putInt(STATE_ACTIVE_POSITION, mActivePosition);
+            }
+        } else {
+            outState.putInt(STATE_ACTIVE_POSITION, mPager.getCurrentItem());
         }
     }
 
@@ -105,6 +189,19 @@ public class MainActivity extends SherlockFragmentActivity {
         final MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> list, View view, int position,
+            long id) {
+        mActivePosition = position;
+        displayFragment(position);
+    }
+
+    private void displayFragment(final int fragmentId) {
+        final Fragment fragment = mFragmentListAdapter.getFragment(fragmentId);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, fragment).commit();
     }
 
     /**

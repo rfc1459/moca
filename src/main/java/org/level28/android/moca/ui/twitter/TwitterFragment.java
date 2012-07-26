@@ -86,6 +86,10 @@ public class TwitterFragment extends ItemListFragment<Tweet> {
     /** Final Twitter search url */
     private String TWITTER_SEARCH_URL;
 
+    public TwitterFragment() {
+        loaderId = 23;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

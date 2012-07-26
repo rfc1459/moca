@@ -90,6 +90,11 @@ public abstract class ItemListFragment<E> extends SherlockFragment implements
     protected ProgressBar progressBar;
 
     /**
+     * Loader identifier
+     */
+    protected int loaderId = 0;
+
+    /**
      * Is the list currently shown?
      */
     protected boolean listShown;
@@ -102,7 +107,7 @@ public abstract class ItemListFragment<E> extends SherlockFragment implements
             setListShown(true, false);
         }
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(loaderId, null, this);
     }
 
     @Override
@@ -200,7 +205,7 @@ public abstract class ItemListFragment<E> extends SherlockFragment implements
             return;
         }
 
-        getLoaderManager().restartLoader(0, args, this);
+        getLoaderManager().restartLoader(loaderId, args, this);
     }
 
     @Override

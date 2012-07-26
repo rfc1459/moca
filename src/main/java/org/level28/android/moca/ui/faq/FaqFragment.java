@@ -23,6 +23,7 @@ package org.level28.android.moca.ui.faq;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.level28.android.moca.AsyncLoader;
@@ -50,6 +51,10 @@ import android.widget.ListView;
 public class FaqFragment extends ItemListFragment<FaqEntry> {
 
     static final String LOG_TAG = "FaqFragment";
+
+    public FaqFragment() {
+        loaderId = 42;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -94,7 +99,7 @@ public class FaqFragment extends ItemListFragment<FaqEntry> {
                 }
 
                 FaqDeserializer jsonLoader = new FaqDeserializer();
-                List<FaqEntry> entries;
+                List<FaqEntry> entries = Collections.emptyList();
                 InputStream in = null;
                 try {
                     in = getContext().getResources().openRawResource(R.raw.faq);
@@ -102,10 +107,8 @@ public class FaqFragment extends ItemListFragment<FaqEntry> {
                 } catch (NotFoundException e) {
                     // WTF?
                     Log.wtf(LOG_TAG, "Raw JSON resource for FAQ not found", e);
-                    return null;
                 } catch (JsonDeserializerException e) {
                     Log.e(LOG_TAG, "Internal Jackson error", e);
-                    return null;
                 } finally {
                     if (in != null) {
                         try {
