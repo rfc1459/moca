@@ -23,6 +23,7 @@ package org.level28.android.moca.ui.home;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.level28.android.moca.AsyncLoader;
@@ -79,7 +80,7 @@ public class HomeFragment extends ItemListFragment<HomeSection> {
                 }
 
                 HomeDeserializer jsonLoader = new HomeDeserializer();
-                List<HomeSection> contents;
+                List<HomeSection> contents = Collections.emptyList();
                 InputStream in = null;
                 try {
                     in = getContext().getResources()
@@ -88,10 +89,8 @@ public class HomeFragment extends ItemListFragment<HomeSection> {
                 } catch (NotFoundException e) {
                     // Are you kidding me?
                     Log.wtf(LOG_TAG, "Raw JSON resource for Home not found", e);
-                    return null;
                 } catch (JsonDeserializerException e) {
                     Log.e(LOG_TAG, "Internal Jackson error", e);
-                    return null;
                 } finally {
                     if (in != null) {
                         try {
