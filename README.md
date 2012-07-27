@@ -73,8 +73,7 @@ Licenses
 
 ### Icons and other artwork ###
 
-I've been unable to find the copyright owner for the original MOCA logo,
-if you're him please drop me a line to get proper attribution.
+The MOCA 2012 logo has been designed by [Lopoc][lopoc].
 
 Launcher icons have been generated using the [Android Asset
 Studio][assetstudio] and thus they are licensed under a [Creative Commons
@@ -86,5 +85,6 @@ Attribution 3.0 Unported License][CC-BY-3.0].
 [maven]: http://maven.apache.org/
 [android-maven-plugin]: http://code.google.com/p/maven-android-plugin/
 [gh]: https://github.com/github/android/
+[lopoc]: https://twitter.com/lopoc_
 [assetstudio]: http://android-ui-utils.googlecode.com/hg/asset-studio/dist/index.html
 [CC-BY-3.0]: http://creativecommons.org/licenses/by/3.0/
