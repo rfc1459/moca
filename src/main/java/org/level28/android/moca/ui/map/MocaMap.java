@@ -24,6 +24,7 @@ package org.level28.android.moca.ui.map;
 import org.level28.android.moca.R;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -35,6 +36,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import com.google.android.maps.OverlayItem;
 
 /**
  * Moca map host.
@@ -46,12 +48,40 @@ import com.google.android.maps.MyLocationOverlay;
  */
 public class MocaMap extends SherlockMapActivity {
 
+    /**
+     * The map.
+     */
     private MapView mMap;
 
+    /**
+     * Overlay for user's location.
+     */
     private MyLocationOverlay mMyLocation;
+
+    /**
+     * Drawable for MOCA pushpin.
+     */
+    private Drawable mMocaPushPinDrawable;
+
+    /**
+     * Overlay holding MOCA pushpin.
+     */
+    private PushpinOverlay mPushpinOverlay;
+
+    /**
+     * Status of the user location overlay.
+     */
     private boolean mMyLocationEnabled;
+
+    /**
+     * State retainer for location overlay status. Used to restore last overlay
+     * status across activity suspend/resume cycles.
+     */
     private boolean mLocationWasEnabled;
 
+    /**
+     * MOCA location in {@code "lat,lon"} format.
+     */
     private String mMocaLatLonUrl;
 
     @Override
@@ -78,7 +108,11 @@ public class MocaMap extends SherlockMapActivity {
         controller.setCenter(moca);
         controller.setZoom(zoomLevel);
 
-        // TODO: pushpin overlay for MOCA
+        // Use the application icon as drawable for MOCA pushpin
+        mMocaPushPinDrawable = getResources().getDrawable(
+                R.drawable.ic_launcher);
+        mPushpinOverlay = new PushpinOverlay(this, mMocaPushPinDrawable,
+                new OverlayItem(moca, "MOCA 2012", ""));
 
         // Setup current location overlay
         mMyLocation = new MyLocationOverlay(this, mMap);
@@ -98,6 +132,7 @@ public class MocaMap extends SherlockMapActivity {
         super.onStart();
         // Kick-off tile preloading
         mMap.preLoad();
+        mMap.getOverlays().add(mPushpinOverlay);
     }
 
     @Override
@@ -115,6 +150,20 @@ public class MocaMap extends SherlockMapActivity {
         mLocationWasEnabled = mMyLocationEnabled;
         enableMyLocation(false);
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        mMap.getOverlays().remove(mPushpinOverlay);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Release references
+        mMocaPushPinDrawable = null;
+        mPushpinOverlay = null;
+        super.onDestroy();
     }
 
     @Override
@@ -184,7 +233,7 @@ public class MocaMap extends SherlockMapActivity {
     }
 
     /**
-     * (Try to) start the Google Navigator to get directions for MOCA.
+     * (Try to) start Google Navigator to get directions for MOCA.
      */
     private void startNavigator() {
         Intent intent = new Intent(Intent.ACTION_VIEW,
