@@ -26,7 +26,8 @@
     <string name="home">About us</string>
     <string name="twitter" tools:ignore="MissingTranslation">Twitter</string>
     <string name="faq" tools:ignore="MissingTranslation">FAQ</string>
-    <string name="partners" tools:ignore="UnusedResources">Partners</string>
+    <string name="partners">Partners</string>
+    <string name="sponsors">Sponsors</string>
     <string name="map">Map</string>
     <string name="menu_more">More</string>
     <string name="menu_locate">Enable location</string>

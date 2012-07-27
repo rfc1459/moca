@@ -78,28 +78,26 @@ public class MocaFragmentAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        // FIXME: MOAR FRAGMENTS!
         return 3;
     }
 
+    // @formatter:off
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
         case 0:
             return mResources.getString(R.string.home).toUpperCase(Locale.US);
         case 1:
-            return mResources.getString(R.string.twitter)
-                    .toUpperCase(Locale.US);
+            return mResources.getString(R.string.twitter).toUpperCase(Locale.US);
         case 2:
             return mResources.getString(R.string.faq).toUpperCase(Locale.US);
-        /*
         case 3:
             return mResources.getString(R.string.sponsors).toUpperCase(Locale.US);
         case 4:
             return mResources.getString(R.string.partners).toUpperCase(Locale.US);
-        */
         default:
             return null;
         }
     }
+    // @formatter:on
 }
