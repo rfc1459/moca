@@ -23,4 +23,9 @@
         android:icon="@drawable/ic_action_locate"
         android:title="@string/menu_locate"
         android:showAsAction="always" />
+    <item
+        android:id="@+id/menu_directions"
+        android:icon="@drawable/ic_action_directions"
+        android:title="@string/menu_directions"
+        android:showAsAction="always" />
 </menu>

@@ -23,6 +23,8 @@ package org.level28.android.moca.ui.map;
 
 import org.level28.android.moca.R;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -49,6 +51,8 @@ public class MocaMap extends SherlockMapActivity {
     private MyLocationOverlay mMyLocation;
     private boolean mMyLocationEnabled;
     private boolean mLocationWasEnabled;
+
+    private String mMocaLatLonUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +85,9 @@ public class MocaMap extends SherlockMapActivity {
         mLocationWasEnabled = false;
         mMyLocationEnabled = false;
 
-        // TODO: action menu item to start the system navigator (if any)
+        // Store the latlon url for later use by the navigator
+        mMocaLatLonUrl = Float.valueOf(coords[0] / 1e6f).toString() + ","
+                + Float.valueOf(coords[1] / 1e6f);
 
         // Enable the builtin zoom controls
         mMap.setBuiltInZoomControls(true);
@@ -131,6 +137,9 @@ public class MocaMap extends SherlockMapActivity {
                 scheduleJumpToCurrentLocation();
             }
             return true;
+        case R.id.menu_directions:
+            startNavigator();
+            return true;
         default:
             return false;
         }
@@ -172,6 +181,16 @@ public class MocaMap extends SherlockMapActivity {
         mMap.postInvalidate();
 
         // FIXME: switch location action item image?
+    }
+
+    /**
+     * (Try to) start the Google Navigator to get directions for MOCA.
+     */
+    private void startNavigator() {
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("google.navigation:q=" + mMocaLatLonUrl));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /*

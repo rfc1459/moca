@@ -33,6 +33,7 @@
     <string name="menu_license">License</string>
     <string name="menu_support_mx">Support MX</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="menu_directions">Get directions</string>
     <string name="no_tweets">No tweets :-(</string>
     <string name="network_error">A network error occurred. Please try again.</string>
 </resources>
