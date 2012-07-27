@@ -71,7 +71,7 @@ public class FaqAdapter extends ItemListAdapter<FaqEntry, FaqItemView> {
         // Check if we have to display a category header
         if (entriesWithHeader.contains(item.id)) {
             ViewUtils.setGone(view.header, false);
-            view.header.setText(item.category);
+            view.header.setText(item.category.toUpperCase());
         } else {
             ViewUtils.setGone(view.header, true);
         }
