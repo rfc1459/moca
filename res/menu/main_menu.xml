@@ -21,17 +21,27 @@
     <item
         android:id="@+id/menu_map"
         android:title="@string/map"
+        android:icon="@drawable/ic_menu_map"
         android:showAsAction="never" />
     <item
         android:id="@+id/menu_support_mx"
         android:title="@string/menu_support_mx"
+        android:icon="@drawable/ic_menu_mx"
         android:showAsAction="never" />
     <item
-        android:id="@+id/menu_about"
-        android:title="@string/menu_about"
-        android:showAsAction="never" />
-    <item
-        android:id="@+id/menu_license"
-        android:title="@string/menu_license"
-        android:showAsAction="never" />
+        android:id="@+id/menu_more"
+        android:title="@string/menu_more"
+        android:icon="@drawable/ic_menu_more"
+        android:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_about"
+                android:title="@string/menu_about"
+                android:showAsAction="never" />
+            <item
+                android:id="@+id/menu_license"
+                android:title="@string/menu_license"
+                android:showAsAction="never" />
+        </menu>
+    </item>
 </menu>

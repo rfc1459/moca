@@ -28,6 +28,7 @@
     <string name="faq" tools:ignore="MissingTranslation">FAQ</string>
     <string name="partners" tools:ignore="UnusedResources">Partners</string>
     <string name="map">Map</string>
+    <string name="menu_more">More</string>
     <string name="menu_locate">Enable location</string>
     <string name="menu_about">About</string>
     <string name="menu_license">License</string>
