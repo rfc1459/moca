@@ -27,10 +27,12 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockMapActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 
 /**
  * Moca map host.
@@ -43,6 +45,10 @@ import com.google.android.maps.MapView;
 public class MocaMap extends SherlockMapActivity {
 
     private MapView mMap;
+
+    private MyLocationOverlay mMyLocation;
+    private boolean mMyLocationEnabled;
+    private boolean mLocationWasEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +75,12 @@ public class MocaMap extends SherlockMapActivity {
         controller.setZoom(zoomLevel);
 
         // TODO: pushpin overlay for MOCA
-        // TODO: current location overlay
-        // TODO: action menu item to center on MOCA
+
+        // Setup current location overlay
+        mMyLocation = new MyLocationOverlay(this, mMap);
+        mLocationWasEnabled = false;
+        mMyLocationEnabled = false;
+
         // TODO: action menu item to start the system navigator (if any)
 
         // Enable the builtin zoom controls
@@ -85,15 +95,83 @@ public class MocaMap extends SherlockMapActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mLocationWasEnabled) {
+            enableMyLocation(true);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        // Make sure we ALWAYS disable the location overlay before pausing the
+        // activity
+        mLocationWasEnabled = mMyLocationEnabled;
+        enableMyLocation(false);
+        super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.map_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
             // actionbar icon was clicked, terminate this activity
             finish();
             return true;
+        case R.id.menu_locate:
+            // Toggle current location visibility
+            enableMyLocation(!mMyLocationEnabled);
+            if (mMyLocationEnabled) {
+                scheduleJumpToCurrentLocation();
+            }
+            return true;
         default:
             return false;
         }
+    }
+
+    /**
+     * Animate a jump to current location as soon as we have a fix.
+     */
+    private void scheduleJumpToCurrentLocation() {
+        mMyLocation.runOnFirstFix(new Runnable() {
+            @Override
+            public void run() {
+                mMap.getController().animateTo(mMyLocation.getMyLocation());
+            }
+        });
+    }
+
+    /**
+     * Toggle {@link MyLocationOverlay} functionality.
+     * 
+     * @param enabled
+     *            {@code true} to enable the location overlay, {@code false} to
+     *            disable it
+     */
+    private void enableMyLocation(final boolean enabled) {
+        if (mMyLocationEnabled == enabled) {
+            return;
+        }
+
+        mMyLocationEnabled = enabled;
+
+        if (enabled) {
+            mMap.getOverlays().add(mMyLocation);
+            mMyLocation.enableMyLocation();
+        } else {
+            mMyLocation.disableMyLocation();
+            mMap.getOverlays().remove(mMyLocation);
+        }
+        mMap.postInvalidate();
+
+        // FIXME: switch location action item image?
     }
 
     /*
