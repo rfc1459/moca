@@ -24,4 +24,6 @@
     <dimen name="listPreferredItemPaddingLeft">8dip</dimen>
     <dimen name="listPreferredItemPaddingRight">8dip</dimen>
     <dimen name="listPreferredItemHeightSmall">48dip</dimen>
+    <dimen name="bannerWidth">300dip</dimen>
+    <dimen name="bannerHeight">50dip</dimen>
 </resources>

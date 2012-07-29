@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ banner_list_item.xml - Layout specifcation for sponsor/partner banners
+ Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingTop="10dip"
+    android:paddingLeft="4dip"
+    android:paddingRight="4dip"
+    android:paddingBottom="10dp"
+    tools:context=".ui.MainActivity"
+    tools:ignore="UseCompoundDrawables" >
+
+    <org.level28.android.moca.ui.CacheableImageView
+        android:id="@+id/bannerImage"
+        android:layout_width="@dimen/bannerWidth"
+        android:layout_height="@dimen/bannerHeight"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/bannerLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:linksClickable="true"
+        android:autoLink="web"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
