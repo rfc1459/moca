@@ -24,6 +24,8 @@ package org.level28.android.moca.ui;
 import java.util.Locale;
 
 import org.level28.android.moca.R;
+import org.level28.android.moca.ui.banners.PartnersFragment;
+import org.level28.android.moca.ui.banners.SponsorsFragment;
 import org.level28.android.moca.ui.faq.FaqFragment;
 import org.level28.android.moca.ui.home.HomeFragment;
 import org.level28.android.moca.ui.twitter.TwitterFragment;
@@ -61,12 +63,10 @@ public class MocaFragmentAdapter extends FragmentPagerAdapter {
             return new TwitterFragment();
         case 2:
             return new FaqFragment();
-        /*
         case 3:
             return new SponsorsFragment();
         case 4:
             return new PartnersFragment();
-        */
         default:
             return null;
         }
@@ -78,7 +78,7 @@ public class MocaFragmentAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 3;
+        return 5;
     }
 
     // @formatter:off

@@ -71,6 +71,13 @@ Licenses
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+### Banners for sponsors and partners ###
+
+All banners for sponsors and parters are reproduced with explicit permission
+from their owners. If you intend to fork this project to use it for other
+venues, I kindly ask you to remove those images before committing anything
+else.
+
 ### Icons and other artwork ###
 
 The MOCA 2012 logo has been designed by [Lopoc][lopoc].
