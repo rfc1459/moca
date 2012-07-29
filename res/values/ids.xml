@@ -19,4 +19,5 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <item type="id" name="iv_avatar_tag" />
+    <item type="id" name="iv_banner" />
 </resources>

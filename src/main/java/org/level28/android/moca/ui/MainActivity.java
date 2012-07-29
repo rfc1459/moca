@@ -24,6 +24,7 @@ package org.level28.android.moca.ui;
 import org.level28.android.moca.BuildConfig;
 import org.level28.android.moca.R;
 import org.level28.android.moca.bitmaps.NetworkAvatarLoader;
+import org.level28.android.moca.bitmaps.SimpleBitmapLoader;
 import org.level28.android.moca.ui.map.MocaMap;
 
 import android.annotation.TargetApi;
@@ -61,6 +62,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     private NetworkAvatarLoader mAvatarLoader;
 
+    private SimpleBitmapLoader mBannerLoader;
+
     private MocaFragmentAdapter mFragmentAdapter;
 
     private FragmentListAdapter mFragmentListAdapter;
@@ -89,6 +92,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         // Create a new loader for avatars
         mAvatarLoader = new NetworkAvatarLoader(this);
+        // and a new loader for banners
+        mBannerLoader = new SimpleBitmapLoader(this);
 
         // Instantiate a new FragmentPagerAdapter
         mFragmentAdapter = new MocaFragmentAdapter(getSupportFragmentManager(),
@@ -189,6 +194,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     public NetworkAvatarLoader avatarLoader() {
         return mAvatarLoader;
+    }
+
+    public SimpleBitmapLoader bannerLoader() {
+        return mBannerLoader;
     }
 
     @Override
