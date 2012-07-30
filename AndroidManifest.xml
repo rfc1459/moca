@@ -11,6 +11,12 @@
     <permission android:name="org.level28.android.moca.permission.SYNC_SERVICE" android:protectionLevel="signature"/>
     <uses-permission android:name="org.level28.android.moca.permission.SYNC_SERVICE"/>
 
+    <!-- Sync provider permissions: blame Google for requiring all this shit to work with sync providers -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16"/>
 
     <application android:debuggable="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name=".MocaApp" android:theme="@style/Theme.Moca.Dark">
@@ -22,5 +28,14 @@
             </intent-filter>
         </activity>
         <activity android:exported="false" android:label="@string/map" android:name=".ui.map.MocaMap"/>
+
+        <!-- The authenticator service -->
+        <service android:exported="false" android:name=".service.MocaAuthenticatorService" android:process=":auth">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+
+            <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
+        </service>
     </application>
 </manifest>

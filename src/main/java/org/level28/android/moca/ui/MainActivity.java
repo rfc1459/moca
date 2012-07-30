@@ -25,8 +25,10 @@ import org.level28.android.moca.BuildConfig;
 import org.level28.android.moca.R;
 import org.level28.android.moca.bitmaps.NetworkAvatarLoader;
 import org.level28.android.moca.bitmaps.SimpleBitmapLoader;
+import org.level28.android.moca.sync.MocaAuthenticator;
 import org.level28.android.moca.ui.map.MocaMap;
 
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
@@ -158,6 +160,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         // Obtain the array of URLs for MOCA 2012 trailers
         mTrailers = getResources().getStringArray(R.array.trailer_urls);
+
+        // Check if we need to create the dummy account
+        AccountManager am = AccountManager.get(this);
+        if (!MocaAuthenticator.dummyAccountExists(am)) {
+            MocaAuthenticator.addDummyAccount(am);
+        }
 
         if (BuildConfig.DEBUG) {
             Log.v(LOG_TAG, "MainActivity awakened, have fun ;-)");
