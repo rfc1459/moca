@@ -29,6 +29,7 @@ import org.level28.android.moca.ui.map.MocaMap;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -213,6 +214,12 @@ public class MainActivity extends SherlockFragmentActivity implements
         case R.id.menu_map:
             startActivity(new Intent(this, MocaMap.class));
             return true;
+        case R.id.menu_support_mx: {
+            final Uri mxUri = Uri.parse(getResources().getString(
+                    R.string.support_mx_url));
+            startActivity(createBrowserIntent(mxUri));
+            return true;
+        }
         default:
             return false;
         }
@@ -259,5 +266,12 @@ public class MainActivity extends SherlockFragmentActivity implements
         }
         BugSenseHandler.setup(this, key);
         Log.i(LOG_TAG, "BugSense handler installed and ready");
+    }
+
+    /**
+     * Create an intent suitable for opening a web page.
+     */
+    private static Intent createBrowserIntent(final Uri uri) {
+        return new Intent(Intent.ACTION_VIEW, uri);
     }
 }

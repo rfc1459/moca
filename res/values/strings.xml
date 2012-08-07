@@ -18,14 +18,11 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- DO NOT override the following two strings in localized versions -->
-    <string name="bugsense_key" tools:ignore="MissingTranslation">${bugsense.key}</string>
-    <string name="maps_key" tools:ignore="MissingTranslation">${gmaps.key}</string>
     <string name="app_name" tools:ignore="MissingTranslation">MOCA</string>
-    <!-- Start localizing from here -->
-    <string name="home">About us</string>
     <string name="twitter" tools:ignore="MissingTranslation">Twitter</string>
     <string name="faq" tools:ignore="MissingTranslation">FAQ</string>
+    <!-- Start localizing from here -->
+    <string name="home">About us</string>
     <string name="partners">Partners</string>
     <string name="sponsors">Sponsors</string>
     <string name="map">Map</string>

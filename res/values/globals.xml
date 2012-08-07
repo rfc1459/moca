@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
- lint.xml - Android Lint configuration
+ globals.xml - Global configuration parameters
  Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
 
  This program is free software; you can redistribute it and/or
@@ -17,12 +17,11 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<lint>
-    <issue id="AlwaysShowAction">
-        <ignore path="res/menu/map_menu.xml" />
-    </issue>
-    <issue id="HardcodedDebugMode" severity="ignore" />
-    <issue id="MissingTranslation">
-        <ignore path="res/values/globals.xml" />
-    </issue>
-</lint>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Key for BugSense reporting system (pulled in via Maven properties) -->
+    <string name="bugsense_key">${bugsense.key}</string>
+    <!-- Key for Google Maps API (pulled in via Maven properties) -->
+    <string name="maps_key">${gmaps.key}</string>
+    <!-- URL for donations page -->
+    <string name="support_mx_url">http://moca.olografix.org/moca2012/pages/support</string>
+</resources>
