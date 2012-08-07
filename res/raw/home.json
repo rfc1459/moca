@@ -1,18 +1,18 @@
 [
   {
     "header": "Metro Olografix",
-    "contents": "<b>FIXME</b>: please translate from <tt>res/raw-it/home.json</tt>"
+    "contents": "Metro Olografix is a cultural association of free individuals who use telematic means to enhance their personal interests and their differences. The purpose of the association is to disseminate a culture of telematics other than the one proposed by the market imperatives, but which is as close as possible to the one of the pioneers of BBSs. Obviously without rejecting the means now available, Metro Olografix wants to recreate the spirit, charm, wonder and sense of freedom of the first experiments."
   },
   {
     "header": "MOCA",
-    "contents": "<b>FIXME</b>: please translate from <tt>res/raw-it/home.json</tt>"
+    "contents": "Metro Olografix Camp is a mixed-style (Italian and North-European) hacker camp with free access which hosts the best hackers from Italy (and more). It takes places every 4 years in Pescara, home town of Metro Olografix."
   },
   {
     "header": "Contact us",
-    "contents": "<b>FIXME</b>: please translate from <tt>res/raw-it/home.json</tt>"
+    "contents": "To get in touch with us you can either send an email to <a href=\"mailto:moca@olografix.org\">moca@olografix.org</a>, visit <a href=\"http://moca.olografix.org\">http://moca.olografix.org</a> or connect to <a href=\"http://www.azzurra.org\">Azzurra IRC Network</a> and join #olografix to chat with us (you might need to register your nickname)."
   },
   {
     "header": "Help us",
-    "contents": "<b>FIXME</b>: please translate from <tt>res/raw-it/home.json</tt>"
+    "contents": "A hacker camp takes a lot of effort and money for its organization. You can help us either by directly participating in its organization or by sending us a donation through PayPal."
   }
 ]
