@@ -50,7 +50,8 @@ public class PartnersFragment extends BannerFragment {
                 new Banner(R.drawable.btitalia, "http://www.backtrack.it"),
                 new Banner(R.drawable.dyne, "http://www.dyne.org"),
                 new Banner(R.drawable.azzurra, "http://www.azzurra.org"),
-                new Banner(R.drawable.mamma, "http://www.mamma.am")
+                new Banner(R.drawable.mamma, "http://www.mamma.am"),
+                new Banner(R.drawable.phtv, "http://www.phtv.it"),
         });
         // @formatter:on
     }
