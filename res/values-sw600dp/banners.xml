@@ -23,6 +23,8 @@
     <item type="drawable" name="btitalia">@drawable/btitalia_tablet</item>
     <item type="drawable" name="dyne">@drawable/dyne_tablet</item>
     <item type="drawable" name="ggdroma">@drawable/ggdroma_tablet</item>
+    <item type="drawable" name="kutmusic">@drawable/kutmusic_tablet</item>
+    <item type="drawable" name="lum">@drawable/lum_tablet</item>
     <item type="drawable" name="mamma">@drawable/mamma_tablet</item>
     <item type="drawable" name="micso">@drawable/micso_tablet</item>
     <item type="drawable" name="phtv">@drawable/phtv_tablet</item>
@@ -31,4 +33,5 @@
     <item type="drawable" name="sikurezza">@drawable/sikurezza_tablet</item>
     <item type="drawable" name="slackware">@drawable/slackware_tablet</item>
     <item type="drawable" name="sonicwall">@drawable/sonicwall_tablet</item>
+    <item type="drawable" name="videoartscope">@drawable/videoartscope_tablet</item>
 </resources>

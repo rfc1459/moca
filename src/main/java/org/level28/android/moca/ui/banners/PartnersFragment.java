@@ -52,6 +52,9 @@ public class PartnersFragment extends BannerFragment {
                 new Banner(R.drawable.azzurra, "http://www.azzurra.org"),
                 new Banner(R.drawable.mamma, "http://www.mamma.am"),
                 new Banner(R.drawable.phtv, "http://www.phtv.it"),
+                new Banner(R.drawable.kutmusic, "http://www.kutmusic.com"),
+                new Banner(R.drawable.videoartscope, "http://www.videoartscope.com"),
+                new Banner(R.drawable.lum, "http://www.lum.it"),
         });
         // @formatter:on
     }
