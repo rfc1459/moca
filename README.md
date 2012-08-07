@@ -6,7 +6,7 @@ events, infos and yells from their fine hosts.
 
 The application will be available (eventually) on the Google Play Store.
 
-**FIXME: screenshot(s) here**
+![Screenshot][screenshot]
 
 
 Requirements
@@ -95,3 +95,4 @@ Attribution 3.0 Unported License][CC-BY-3.0].
 [lopoc]: https://twitter.com/lopoc_
 [assetstudio]: http://android-ui-utils.googlecode.com/hg/asset-studio/dist/index.html
 [CC-BY-3.0]: http://creativecommons.org/licenses/by/3.0/
+[screenshot]: http://morpheus.level28.org/stuff/composite.png
