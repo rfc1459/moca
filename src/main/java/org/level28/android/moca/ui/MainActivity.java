@@ -220,6 +220,9 @@ public class MainActivity extends SherlockFragmentActivity implements
             startActivity(createBrowserIntent(mxUri));
             return true;
         }
+        case R.id.menu_license:
+            displayLicenseDialog();
+            return true;
         default:
             return false;
         }
@@ -273,5 +276,13 @@ public class MainActivity extends SherlockFragmentActivity implements
      */
     private static Intent createBrowserIntent(final Uri uri) {
         return new Intent(Intent.ACTION_VIEW, uri);
+    }
+
+    /**
+     * Instantiate and display the license dialog.
+     */
+    private void displayLicenseDialog() {
+        LicenseDialogFragment frag = new LicenseDialogFragment();
+        frag.show(getSupportFragmentManager(), "dialog");
     }
 }
