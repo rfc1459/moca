@@ -27,6 +27,7 @@
     <item type="drawable" name="lum">@drawable/lum_tablet</item>
     <item type="drawable" name="mamma">@drawable/mamma_tablet</item>
     <item type="drawable" name="micso">@drawable/micso_tablet</item>
+    <item type="drawable" name="oltrelinux">@drawable/oltrelinux_tablet</item>
     <item type="drawable" name="phtv">@drawable/phtv_tablet</item>
     <item type="drawable" name="quantumleap">@drawable/quantumleap_tablet</item>
     <item type="drawable" name="securenetwork">@drawable/securenetwork_tablet</item>
