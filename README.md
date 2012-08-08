@@ -4,7 +4,7 @@ MOCA for Android
 MOCA for Android is an application to keep [MOCA][] attendees up-to-date with
 events, infos and yells from their fine hosts.
 
-The application will be available (eventually) on the Google Play Store.
+The application is available on the [Google Play Store][store].
 
 ![Screenshot][screenshot]
 
@@ -96,3 +96,4 @@ Attribution 3.0 Unported License][CC-BY-3.0].
 [assetstudio]: http://android-ui-utils.googlecode.com/hg/asset-studio/dist/index.html
 [CC-BY-3.0]: http://creativecommons.org/licenses/by/3.0/
 [screenshot]: http://morpheus.level28.org/stuff/composite.png
+[store]: https://play.google.com/store/apps/details?id=org.level28.android.moca
