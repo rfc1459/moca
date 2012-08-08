@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ about_fragment.xml - Layout for "About" dialog
+ Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context=".ui.MainActivity"
+    tools:ignore="HardcodedText" >
+
+    <TextView
+        android:id="@+id/aboutAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:text="@string/app_name" />
+
+    <TextView
+        android:id="@+id/aboutVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/aboutAppName"
+        android:layout_marginLeft="5sp"
+        android:layout_toRightOf="@+id/aboutAppName"
+        android:textStyle="bold"
+        android:text="${project.version}" />
+
+    <TextView
+        android:id="@+id/aboutBuildLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/aboutAppName"
+        android:layout_marginTop="10sp"
+        android:layout_alignParentLeft="true"
+        android:text="Build type:" />
+
+    <TextView
+        android:id="@+id/aboutBuildType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/aboutBuildLabel"
+        android:layout_marginLeft="5sp"
+        android:layout_toRightOf="@+id/aboutBuildLabel"
+        android:textStyle="bold" />
+</RelativeLayout>

@@ -223,6 +223,9 @@ public class MainActivity extends SherlockFragmentActivity implements
         case R.id.menu_license:
             displayLicenseDialog();
             return true;
+        case R.id.menu_about:
+            displayAboutDialog();
+            return true;
         default:
             return false;
         }
@@ -283,6 +286,14 @@ public class MainActivity extends SherlockFragmentActivity implements
      */
     private void displayLicenseDialog() {
         LicenseDialogFragment frag = new LicenseDialogFragment();
+        frag.show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
+     * Instantiate and display the about dialog.
+     */
+    private void displayAboutDialog() {
+        AboutDialogFragment frag = new AboutDialogFragment();
         frag.show(getSupportFragmentManager(), "dialog");
     }
 }
