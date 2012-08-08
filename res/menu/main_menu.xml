@@ -29,6 +29,26 @@
         android:icon="@drawable/ic_menu_mx"
         android:showAsAction="never" />
     <item
+        android:id="@+id/menu_trailer"
+        android:title="@string/menu_trailers"
+        android:icon="@drawable/ic_menu_trailer"
+        android:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_teaser_one"
+                android:title="@string/menu_teaser_one"
+                android:showAsAction="never" />
+            <item
+                android:id="@+id/menu_teaser_two"
+                android:title="@string/menu_teaser_two"
+                android:showAsAction="never" />
+            <item
+                android:id="@+id/menu_subliminal"
+                android:title="@string/menu_subliminal"
+                android:showAsAction="never" />
+        </menu>
+    </item>
+    <item
         android:id="@+id/menu_more"
         android:title="@string/menu_more"
         android:icon="@drawable/ic_menu_more"

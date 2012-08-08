@@ -24,4 +24,10 @@
     <string name="maps_key">${gmaps.key}</string>
     <!-- URL for donations page -->
     <string name="support_mx_url">http://moca.olografix.org/moca2012/pages/support</string>
+    <!-- URLs for trailers -->
+    <string-array name="trailer_urls">
+        <item>http://www.youtube.com/watch?v=CADsprEVYd0</item>
+        <item>http://www.youtube.com/watch?v=c6qKbWv1Kg0</item>
+        <item>http://www.youtube.com/watch?v=f5ji4J5DJHo</item>
+    </string-array>
 </resources>

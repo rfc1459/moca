@@ -21,6 +21,9 @@
     <string name="app_name" tools:ignore="MissingTranslation">MOCA</string>
     <string name="twitter" tools:ignore="MissingTranslation">Twitter</string>
     <string name="faq" tools:ignore="MissingTranslation">FAQ</string>
+    <string name="menu_teaser_one" tools:ignore="MissingTranslation">Teaser Trailer 1</string>
+    <string name="menu_teaser_two" tools:ignore="MissingTranslation">Teaser Trailer 2</string>
+    <string name="menu_subliminal" tools:ignore="MissingTranslation">The Subliminal Trailer</string>
     <!-- Start localizing from here -->
     <string name="home">About us</string>
     <string name="partners">Partners</string>
@@ -33,6 +36,7 @@
     <string name="menu_support_mx">Support MX</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_directions">Get directions</string>
+    <string name="menu_trailers">Trailers</string>
     <string name="no_tweets">No tweets :-(</string>
     <string name="network_error">A network error occurred. Please try again.</string>
 </resources>

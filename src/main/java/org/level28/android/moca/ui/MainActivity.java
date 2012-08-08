@@ -75,6 +75,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     private int mActivePosition = ListView.INVALID_POSITION;
 
+    private String[] mTrailers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +156,9 @@ public class MainActivity extends SherlockFragmentActivity implements
             }
         }
 
+        // Obtain the array of URLs for MOCA 2012 trailers
+        mTrailers = getResources().getStringArray(R.array.trailer_urls);
+
         if (BuildConfig.DEBUG) {
             Log.v(LOG_TAG, "MainActivity awakened, have fun ;-)");
         }
@@ -210,7 +215,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        final int menuItemId = item.getItemId();
+        switch (menuItemId) {
         case R.id.menu_map:
             startActivity(new Intent(this, MocaMap.class));
             return true;
@@ -225,6 +231,11 @@ public class MainActivity extends SherlockFragmentActivity implements
             return true;
         case R.id.menu_about:
             displayAboutDialog();
+            return true;
+        case R.id.menu_teaser_one:
+        case R.id.menu_teaser_two:
+        case R.id.menu_subliminal:
+            startActivity(getIntentForTrailer(menuItemId));
             return true;
         default:
             return false;
@@ -295,5 +306,27 @@ public class MainActivity extends SherlockFragmentActivity implements
     private void displayAboutDialog() {
         AboutDialogFragment frag = new AboutDialogFragment();
         frag.show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
+     * Resolve a menu id into a trailer URL and return an intent for it.
+     */
+    private Intent getIntentForTrailer(final int menuItemId) {
+        final int urlOffset;
+        switch (menuItemId) {
+        case R.id.menu_teaser_one:
+            urlOffset = 0;
+            break;
+        case R.id.menu_teaser_two:
+            urlOffset = 1;
+            break;
+        case R.id.menu_subliminal:
+            urlOffset = 2;
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown menu id " + menuItemId
+                    + " for trailer intent resolution");
+        }
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(mTrailers[urlOffset]));
     }
 }
