@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- colors.xml - Color resources for MOCA app
+ schedule.xml - phone layout for schedule activity
  Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
 
  This program is free software; you can redistribute it and/or
@@ -17,17 +17,18 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<resources>
-    <color name="moca_orange">#ffffd42a</color>
-    <color name="moca_accent">#ffd30054</color>
-    <color name="half_darkgrey">#ff444444</color>
-    <color name="tweet_primary">#ffcccccc</color>
-    <color name="tweet_secondary">#ffaaaaaa</color>
-    <color name="tweet_timestamp">#ff888888</color>
-    <color name="schedule_background">#ffdddddd</color>
-    <color name="schedule_divider">#1a000000</color>
-    <color name="schedule_primary">#ff222222</color>
-    <color name="schedule_secondary">#ff555555</color>
-    <color name="schedule_time">#ff444444</color>
-    <color name="background_holo_light">#fff3f3f3</color>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".schedule.ScheduleActivity" >
+
+    <fragment
+        android:id="@+id/sessionListFragment"
+        android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/item_list" />
+
+</LinearLayout>

@@ -37,32 +37,38 @@
 
 package org.level28.android.moca.service;
 
-import android.app.IntentService;
+import org.level28.android.moca.sync.SyncAdapter;
+
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.IBinder;
 
 /**
  * Background service for data synchronization (events, feeds, updates, etc.)
  *
  * @author Matteo Panella
  */
-public class SyncService extends IntentService {
-    private static final String LOG_TAG = "SyncService";
+public class SyncService extends Service {
 
-    public SyncService() {
-        super(LOG_TAG);
+    private static final Object sSyncAdapterLock = new Object();
+    private static SyncAdapter sSyncAdapter = null;
+
+    @Override
+    public void onCreate() {
+        synchronized (sSyncAdapterLock) {
+            if (sSyncAdapter == null) {
+                sSyncAdapter = new SyncAdapter(getApplicationContext(), false);
+            }
+        }
     }
 
-    /* (non-Javadoc)
-     * @see android.app.IntentService#onHandleIntent(android.content.Intent)
-     */
     @Override
-    protected void onHandleIntent(Intent intent) {
-        // TODO Auto-generated method stub
-
+    public IBinder onBind(Intent intent) {
+        return sSyncAdapter.getSyncAdapterBinder();
     }
 
     /**

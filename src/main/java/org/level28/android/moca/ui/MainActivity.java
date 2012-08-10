@@ -27,6 +27,7 @@ import org.level28.android.moca.bitmaps.NetworkAvatarLoader;
 import org.level28.android.moca.bitmaps.SimpleBitmapLoader;
 import org.level28.android.moca.sync.MocaAuthenticator;
 import org.level28.android.moca.ui.map.MocaMap;
+import org.level28.android.moca.ui.schedule.ScheduleActivity;
 
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
@@ -244,6 +245,9 @@ public class MainActivity extends SherlockFragmentActivity implements
         case R.id.menu_teaser_two:
         case R.id.menu_subliminal:
             startActivity(getIntentForTrailer(menuItemId));
+            return true;
+        case R.id.menu_schedule:
+            startActivity(new Intent(this, ScheduleActivity.class));
             return true;
         default:
             return false;

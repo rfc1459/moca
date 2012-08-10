@@ -25,11 +25,15 @@ import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
 import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
 import static android.accounts.AccountManager.KEY_ERROR_CODE;
 import static android.accounts.AccountManager.KEY_ERROR_MESSAGE;
+
+import org.level28.android.moca.provider.ScheduleContract;
+
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -42,7 +46,7 @@ public class MocaAuthenticator extends AbstractAccountAuthenticator {
 
     public static final String ACCOUNT_TYPE = "org.level28.android.moca";
 
-    private static final String HARDCODED_USERNAME = "MOCA";
+    public static final String HARDCODED_USERNAME = "MOCA";
     private static final String HARDCODED_PASSWORD = "SonicAmicoDeiLamer";
 
     private Context mContext;
@@ -129,6 +133,11 @@ public class MocaAuthenticator extends AbstractAccountAuthenticator {
         final Account dummyAccount = new Account(HARDCODED_USERNAME,
                 ACCOUNT_TYPE);
         am.addAccountExplicitly(dummyAccount, HARDCODED_PASSWORD, null);
+        // Ensure the dummy account is bound to our content provider
+        ContentResolver.setIsSyncable(dummyAccount, ScheduleContract.CONTENT_AUTHORITY, 1);
+        // Don't force-enable the master sync switch, respect the user's choice
+        // ... nevertheless enable automatic synchronization of schedules (subject to the master sync switch)
+        ContentResolver.setSyncAutomatically(dummyAccount, ScheduleContract.CONTENT_AUTHORITY, true);
         return dummyAccount.name;
     }
 }
