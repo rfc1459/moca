@@ -331,6 +331,12 @@ public class SessionListFragment extends SherlockFragment implements
             // findViewById() calls in bindView()
             final SessionItemView tag = new SessionItemView(view);
             view.setTag(tag);
+            if (!isHoneycomb) {
+                // LinearLayout got dividers in Honeycomb, so we have to fake
+                // them in Froyo and Gingerbread
+                final View divider = view.findViewById(R.id.dividerCompat);
+                ViewUtils.setGone(divider, false);
+            }
             return view;
         }
 
