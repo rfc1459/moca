@@ -24,16 +24,16 @@ package org.level28.android.moca.json;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.level28.android.moca.model.Session;
-import org.level28.android.moca.provider.ScheduleContract.Sessions;
 
-import android.content.ContentProviderOperation;
 import android.text.TextUtils;
 import android.text.format.Time;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Maps;
 
 /**
  * Deserializer for TMA-1 schedule API.
@@ -41,12 +41,12 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author Matteo Panella
  */
 public class ScheduleDeserializer extends
-        AbstractJsonDeserializer<List<ContentProviderOperation>> {
+        AbstractJsonDeserializer<Map<String, Session>> {
 
     private static final Time sTime = new Time();
 
     @Override
-    public List<ContentProviderOperation> fromInputStream(InputStream in)
+    public Map<String, Session> fromInputStream(InputStream in)
             throws JsonDeserializerException {
         JsonNode root;
         try {
@@ -59,36 +59,14 @@ public class ScheduleDeserializer extends
             throw new JsonDeserializerException("Root node is not an array");
         }
 
-        ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-        final long now = System.currentTimeMillis();
-
-        // Remove all existing sessions
-        batch.add(ContentProviderOperation.newDelete(Sessions.CONTENT_URI)
-                .build());
+        HashMap<String, Session> result = Maps.newHashMap();
 
         for (JsonNode node : root) {
             Session session = parseSession(node);
-            // If we get this far, the session data has been validated, so we
-            // can generate a new insert operation
-            ContentProviderOperation.Builder builder = ContentProviderOperation
-                    .newInsert(Sessions.CONTENT_URI)
-                    .withValue(Sessions.UPDATED, now)
-                    .withValue(Sessions.SESSION_ID, session.getId())
-                    .withValue(Sessions.SESSION_TITLE, session.getTitle())
-                    .withValue(Sessions.SESSION_DAY, session.getDay())
-                    .withValue(Sessions.SESSION_START, session.getStartTime())
-                    .withValue(Sessions.SESSION_END, session.getEndTime())
-                    .withValue(Sessions.SESSION_HOSTS, session.getHosts())
-                    .withValue(Sessions.SESSION_LANG,
-                            session.getLang().toString());
-            final String sessionAbstract = session.getSessionAbstract();
-            if (sessionAbstract != null) {
-                builder.withValue(Sessions.SESSION_ABSTRACT, sessionAbstract);
-            }
-            batch.add(builder.build());
+            result.put(session.getId(), session);
         }
 
-        return batch;
+        return result;
     }
 
     private static Session parseSession(final JsonNode objectRoot)

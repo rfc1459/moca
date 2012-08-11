@@ -23,6 +23,8 @@ package org.level28.android.moca.model;
 
 import java.util.Locale;
 
+import com.google.common.base.Objects;
+
 import android.text.TextUtils;
 
 /**
@@ -80,28 +82,20 @@ public final class Session {
     private String sessionAbstract;
 
     /**
+     * Cached hash code.
+     */
+    private int mHashCode;
+
+    /**
+     * Whenever some value changes, the cached hash code should be updated.
+     */
+    private boolean mShouldUpdateHashCode = true;
+
+    /**
      * Create an empty session.
      */
     public Session() {
         // No-op
-    }
-
-    /**
-     * Create a new session.
-     * <p>
-     * I know, there are too many parameters...
-     */
-    public Session(final String id, final String title, final int day,
-            final long startTime, final long endTime, final String hosts,
-            final String lang, final String sessionAbstract) {
-        this.setId(id);
-        this.setTitle(title);
-        this.setDay(day);
-        this.setStartTime(startTime);
-        this.setEndTime(endTime);
-        this.setHosts(hosts);
-        this.setLang(lang);
-        this.setSessionAbstract(sessionAbstract);
     }
 
     public String getId() {
@@ -109,11 +103,16 @@ public final class Session {
     }
 
     public void setId(final String id) {
+        if (this.id != null) {
+            throw new IllegalStateException("Session id is immutable");
+        }
+
         if (TextUtils.isEmpty(id)) {
             throw new IllegalArgumentException(
                     "Session id may not be null or empty");
         }
         this.id = id;
+        mShouldUpdateHashCode = true;
     }
 
     public String getTitle() {
@@ -126,6 +125,7 @@ public final class Session {
                     "Session title may not be null or empty");
         }
         this.title = title;
+        mShouldUpdateHashCode = true;
     }
 
     public int getDay() {
@@ -137,6 +137,7 @@ public final class Session {
             throw new IllegalArgumentException("Session day is invalid: " + day);
         }
         this.day = day;
+        mShouldUpdateHashCode = true;
     }
 
     public long getStartTime() {
@@ -145,6 +146,7 @@ public final class Session {
 
     public void setStartTime(long startTime) {
         this.startTime = startTime;
+        mShouldUpdateHashCode = true;
     }
 
     public long getEndTime() {
@@ -153,6 +155,7 @@ public final class Session {
 
     public void setEndTime(long endTime) {
         this.endTime = endTime;
+        mShouldUpdateHashCode = true;
     }
 
     public String getHosts() {
@@ -165,6 +168,7 @@ public final class Session {
                     "Session hosts may not be null or empty");
         }
         this.hosts = hosts;
+        mShouldUpdateHashCode = true;
     }
 
     public Language getLang() {
@@ -172,11 +176,12 @@ public final class Session {
     }
 
     public void setLang(final String lang) {
-        this.lang = Language.valueOf(lang.toUpperCase(Locale.US));
+        setLang(Language.valueOf(lang.toUpperCase(Locale.US)));
     }
 
     public void setLang(Language lang) {
         this.lang = lang;
+        mShouldUpdateHashCode = true;
     }
 
     public String getSessionAbstract() {
@@ -185,5 +190,46 @@ public final class Session {
 
     public void setSessionAbstract(final String sessionAbstract) {
         this.sessionAbstract = sessionAbstract;
+        mShouldUpdateHashCode = true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // Short-circuit for same instance cases
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Session)) {
+            return false;
+        }
+        final Session other = (Session) o;
+        return id.equals(other.id)
+                && title.equals(other.title)
+                && day == other.day
+                && startTime == other.startTime
+                && endTime == other.endTime
+                && hosts.equals(other.hosts)
+                && lang.equals(other.lang)
+                && ((sessionAbstract == null && other.sessionAbstract == null) || (sessionAbstract != null && sessionAbstract
+                        .equals(other.sessionAbstract)));
+    }
+
+    @Override
+    public int hashCode() {
+        // Recompute and cache the hash code if needed
+        if (mShouldUpdateHashCode) {
+            updateCachedHashCode();
+        }
+        return mHashCode;
+    }
+
+    /**
+     * Update the cached hash code for this instance.
+     */
+    private void updateCachedHashCode() {
+        // Guava is a nice way of avoiding the NIH syndrome ;-)
+        Objects.hashCode(id, title, day, startTime, endTime, hosts, lang,
+                sessionAbstract);
+        mShouldUpdateHashCode = false;
     }
 }

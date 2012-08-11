@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 import org.level28.android.moca.BuildConfig;
 import org.level28.android.moca.json.JsonDeserializerException;
-import org.level28.android.moca.json.ScheduleDeserializer;
 import org.level28.android.moca.provider.ScheduleContract;
 import org.level28.android.moca.service.SyncService;
 
@@ -38,9 +37,6 @@ import android.content.SyncResult;
 import android.net.ConnectivityManager;
 import android.os.RemoteException;
 import android.util.Log;
-
-import com.github.kevinsawicki.http.HttpRequest;
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 /**
  * Data synchronization helper.
@@ -78,21 +74,11 @@ class SyncHelper {
                 Log.i(LOG_TAG, "We're online, performing actual synchronization");
             }
 
-            try {
-                ScheduleDeserializer jsonDeserializer = new ScheduleDeserializer();
+            // Synchronize sessions
+            SessionHelper sessionHelper = new SessionHelper(SCHEDULE_URL, mUserAgent, resolver);
+            batch.addAll(sessionHelper.synchronizeSessions());
 
-                HttpRequest request = HttpRequest.get(SCHEDULE_URL)
-                        .userAgent(mUserAgent)
-                        .acceptGzipEncoding().uncompress(true);
-
-                if (request.ok()) {
-                    batch.addAll(jsonDeserializer.fromInputStream(request.stream()));
-                }
-            } catch (HttpRequestException e) {
-                throw new IOException("HTTP request failed", e);
-            }
-            // JsonDeserializerException is thrown to the caller
-
+            // Apply the batch in a single transaction
             try {
                 resolver.applyBatch(ScheduleContract.CONTENT_AUTHORITY, batch);
             } catch (RemoteException e) {
