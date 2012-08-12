@@ -21,11 +21,15 @@
 
 package org.level28.android.moca.model;
 
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Locale;
 
-import com.google.common.base.Objects;
-
 import android.text.TextUtils;
+
+import com.google.common.base.Objects;
 
 /**
  * Data model for sessions.
@@ -103,14 +107,9 @@ public final class Session {
     }
 
     public void setId(final String id) {
-        if (this.id != null) {
-            throw new IllegalStateException("Session id is immutable");
-        }
-
-        if (TextUtils.isEmpty(id)) {
-            throw new IllegalArgumentException(
-                    "Session id may not be null or empty");
-        }
+        checkState(this.id == null, "Session id is immutable");
+        checkArgument(!TextUtils.isEmpty(id),
+                "Session id may not be null or empty");
         this.id = id;
         mShouldUpdateHashCode = true;
     }
@@ -120,10 +119,8 @@ public final class Session {
     }
 
     public void setTitle(final String title) {
-        if (TextUtils.isEmpty(title)) {
-            throw new IllegalArgumentException(
-                    "Session title may not be null or empty");
-        }
+        checkArgument(!TextUtils.isEmpty(title),
+                "Session title may not be null or empty");
         this.title = title;
         mShouldUpdateHashCode = true;
     }
@@ -133,9 +130,7 @@ public final class Session {
     }
 
     public void setDay(int day) {
-        if (day < 1 || day > 3) {
-            throw new IllegalArgumentException("Session day is invalid: " + day);
-        }
+        checkArgument(day >= 1 && day <= 3, "Session day is invalid: %s", day);
         this.day = day;
         mShouldUpdateHashCode = true;
     }
@@ -163,10 +158,8 @@ public final class Session {
     }
 
     public void setHosts(final String hosts) {
-        if (TextUtils.isEmpty(hosts)) {
-            throw new IllegalArgumentException(
-                    "Session hosts may not be null or empty");
-        }
+        checkArgument(!TextUtils.isEmpty(hosts),
+                "Session hosts may not be null or empty");
         this.hosts = hosts;
         mShouldUpdateHashCode = true;
     }
@@ -203,15 +196,11 @@ public final class Session {
             return false;
         }
         final Session other = (Session) o;
-        return id.equals(other.id)
-                && title.equals(other.title)
-                && day == other.day
-                && startTime == other.startTime
-                && endTime == other.endTime
-                && hosts.equals(other.hosts)
-                && lang.equals(other.lang)
-                && ((sessionAbstract == null && other.sessionAbstract == null) || (sessionAbstract != null && sessionAbstract
-                        .equals(other.sessionAbstract)));
+        return equal(id, other.id) && equal(title, other.title)
+                && day == other.day && startTime == other.startTime
+                && endTime == other.endTime && equal(hosts, other.hosts)
+                && lang == other.lang
+                && equal(sessionAbstract, other.sessionAbstract);
     }
 
     @Override
@@ -221,6 +210,11 @@ public final class Session {
             updateCachedHashCode();
         }
         return mHashCode;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("id", id).toString();
     }
 
     /**
