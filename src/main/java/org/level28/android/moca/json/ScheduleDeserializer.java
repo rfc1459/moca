@@ -166,10 +166,27 @@ public class ScheduleDeserializer extends
     }
 
     /**
-     * Pure java reimplementation of {@link Time#parse3339(String)}.
+     * Pure Java reimplementation of {@link Time#parse3339(String)}.
+     * <p>
+     * Due to <a
+     * href="http://code.google.com/p/android/issues/detail?id=16002">Issue
+     * 16002</a>, {@code Time.parse3339()} leaks memory on short input. However,
+     * the same leak happens <em>also</em> if the function is fed a formally
+     * invalid RFC3339 timestamp.
+     * <p>
+     * The safest option is a full rewrite in pure Java, since JNI on Android is
+     * a mess (we'd have to ship the same library for three different
+     * architectures &mdash; not pretty...).
      * 
-     * @see <a
-     *      href="http://code.google.com/p/android/issues/detail?id=16002">http://code.google.com/p/android/issues/detail?id=16002</a>
+     * @param timeString
+     *            a date/time specification formatted as an RFC3339 string
+     * @return the same date/time specification in milliseconds since the Epoch
+     * @throws ParseException
+     *             if the string is formally invalid per RFC3339
+     * @throws NullPointerException
+     *             if the string is {@code null}
+     * @throws IllegalArgumentException
+     *             if the string is less than 10 characters long
      */
     private static long parseTime(String timeString) throws ParseException {
         checkNotNull(timeString, "Time input should not be null");
