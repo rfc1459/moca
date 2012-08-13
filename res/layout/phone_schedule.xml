@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- refs.xml - Configuration-dependent references
+ phone_schedule.xml - phone layout for schedule activity
  Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
 
  This program is free software; you can redistribute it and/or
@@ -17,9 +17,18 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Layout for main activity -->
-    <item name="main" type="layout">@layout/tablet_main</item>
-    <!-- Layout for session schedule activity -->
-    <item name="schedule" type="layout">@layout/tablet_schedule</item>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".schedule.ScheduleActivity" >
+
+    <fragment
+        android:id="@+id/sessionListFragment"
+        android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/item_list" />
+
+</LinearLayout>

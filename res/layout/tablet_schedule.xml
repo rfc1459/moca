@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- schedule.xml - phone layout for schedule activity
+ tablet_schedule.xml - Tablet layout for schedule Activity
  Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
 
  This program is free software; you can redistribute it and/or
@@ -21,14 +21,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".schedule.ScheduleActivity" >
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle"
+    tools:context=".ui.schedule.ScheduleActivity">
 
     <fragment
         android:id="@+id/sessionListFragment"
         android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         tools:layout="@layout/item_list" />
+
+    <FrameLayout
+        android:id="@+id/sessionDetailsContainer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2" />
 
 </LinearLayout>

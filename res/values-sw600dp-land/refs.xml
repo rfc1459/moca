@@ -17,7 +17,9 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Layout for main activity -->
     <item name="main" type="layout">@layout/tablet_main</item>
+    <!-- Layout for session schedule activity -->
+    <item name="schedule" type="layout">@layout/tablet_schedule</item>
 </resources>
