@@ -18,18 +18,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 <resources>
-    <declare-styleable name="PagerHeader">
-        <attr name="activeTextColor" format="color" />
-        <attr name="inactiveTextColor" format="color" />
-        <attr name="tabColor" format="color" />
-        <attr name="tabHeight" format="dimension" />
-        <attr name="tabPadding" format="dimension" />
-        <attr name="paddingPush" format="dimension" />
-        <attr name="fadingEdgeLength" format="dimension" />
-        <attr name="fadingEdgeColorHint" format="color" />
-        <attr name="backgroundColor" format="color" />
-        <attr name="showTopShadow" format="boolean" />
-        <attr name="showBottomBar" format="boolean" />
-        <attr name="showTab" format="boolean" />
+    <declare-styleable name="ScheduleItemLayout">
+        <attr name="state_current" format="boolean" />
     </declare-styleable>
 </resources>

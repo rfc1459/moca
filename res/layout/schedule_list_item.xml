@@ -17,7 +17,8 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.level28.android.moca.widget.ScheduleItemLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -70,4 +71,4 @@
             android:layout_height="wrap_content"
             style="@style/Schedule.Hosts" />
     </LinearLayout>
-</LinearLayout>
+</org.level28.android.moca.widget.ScheduleItemLayout>

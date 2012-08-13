@@ -17,7 +17,9 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <!-- TODO: background for activated state -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_activated="true" android:drawable="@drawable/list_activated_holo" />
+    <item app:state_current="true" android:drawable="@drawable/schedule_current" />
     <item android:drawable="@color/schedule_background" />
 </selector>

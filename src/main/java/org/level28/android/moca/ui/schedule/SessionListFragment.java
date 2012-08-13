@@ -24,6 +24,7 @@ package org.level28.android.moca.ui.schedule;
 import org.level28.android.moca.R;
 import org.level28.android.moca.provider.ScheduleContract.Sessions;
 import org.level28.android.moca.util.ViewUtils;
+import org.level28.android.moca.widget.ScheduleItemLayout;
 
 import android.app.Activity;
 import android.content.Context;
@@ -81,6 +82,7 @@ public class SessionListFragment extends SherlockFragment implements
      * underlying dataset has changed.
      */
     private final ContentObserver mObserver = new ContentObserver(new Handler()) {
+        @Override
         public void onChange(boolean selfChange) {
             if (!isUsable()) {
                 return;
@@ -344,12 +346,20 @@ public class SessionListFragment extends SherlockFragment implements
         public void bindView(View view, Context context, Cursor cursor) {
             // Retrieve the view holder
             final SessionItemView viewHolder = (SessionItemView) view.getTag();
+            final long sessionStart = cursor.getLong(SessionsQuery.START);
+            final long sessionEnd = cursor.getLong(SessionsQuery.END);
+            final long now = System.currentTimeMillis();
             viewHolder.title.setText(cursor.getString(SessionsQuery.TITLE));
             viewHolder.host.setText(cursor.getString(SessionsQuery.HOSTS));
             final CharSequence startTime = DateUtils.formatDateTime(mContext,
-                    cursor.getLong(SessionsQuery.START),
-                    DateUtils.FORMAT_SHOW_TIME);
+                    sessionStart, DateUtils.FORMAT_SHOW_TIME);
             viewHolder.time.setText(startTime);
+
+            // Set (or clear) current session
+            if (view instanceof ScheduleItemLayout) {
+                ((ScheduleItemLayout) view).setCurrent(now >= sessionStart
+                        && now <= sessionEnd);
+            }
         }
     }
 
@@ -368,8 +378,8 @@ public class SessionListFragment extends SherlockFragment implements
          */
         String[] PROJECTION = { BaseColumns._ID, Sessions.SESSION_ID,
                 Sessions.SESSION_TITLE, Sessions.SESSION_DAY,
-                Sessions.SESSION_START, Sessions.SESSION_HOSTS,
-                Sessions.SESSION_LANG, };
+                Sessions.SESSION_START, Sessions.SESSION_END,
+                Sessions.SESSION_HOSTS, Sessions.SESSION_LANG, };
 
         // Column offsets
         int _ID = 0;
@@ -377,7 +387,8 @@ public class SessionListFragment extends SherlockFragment implements
         int TITLE = 2;
         int DAY = 3;
         int START = 4;
-        int HOSTS = 5;
-        int LANG = 6;
+        int END = 5;
+        int HOSTS = 6;
+        int LANG = 7;
     }
 }
