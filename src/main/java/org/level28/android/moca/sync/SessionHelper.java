@@ -69,28 +69,32 @@ class SessionHelper {
             JsonDeserializerException {
         final ArrayList<ContentProviderOperation> sessionsBatch = new ArrayList<ContentProviderOperation>();
 
-        // First of all, get a snapshot of all local sessions...
-        Map<String, Session> localSessions = getSessionsSnapshot();
-        // ... then fetch the list of current sessions...
-        Map<String, Session> remoteSessions = getRemoteSessions();
-        // ... and finally diff them
-        MapDifference<String, Session> diff = Maps.difference(localSessions,
-                remoteSessions);
+        // Get a snapshot of all sessions stored in the database
+        final Map<String, Session> localSessions = getSessionsSnapshot();
+        // Ask the TMA-1 server for updated session data
+        final Map<String, Session> remoteSessions = getRemoteSessions();
 
-        // @formatter:off
-        /*
-         * Now diff contains a nice "patch" that should be transformed into a
-         * batch of ContentProviderOperation.
-         *
-         * Namely:
-         *  diff.entriesDiffering()   -> entries that should be updated with new values
-         *  diff.entriesOnlyOnLeft()  -> entries that should be removed
-         *  diff.entriesOnlyOnRight() -> entries that should be added
-         */
-        // @formatter:on
-        sessionsBatch.addAll(createUpdateOps(diff.entriesDiffering()));
-        sessionsBatch.addAll(createDeleteOps(diff.entriesOnlyOnLeft()));
-        sessionsBatch.addAll(createInsertOps(diff.entriesOnlyOnRight()));
+        if (!remoteSessions.isEmpty()) {
+            // Perform the update only if we got a non-empty reply from the
+            // TMA-1 server
+            final MapDifference<String, Session> diff = Maps.difference(
+                    localSessions, remoteSessions);
+
+            // @formatter:off
+            /*
+             * Now diff contains a nice "patch" that should be transformed into a
+             * batch of ContentProviderOperation.
+             *
+             * Namely:
+             *  diff.entriesDiffering()   -> entries that should be updated with new values
+             *  diff.entriesOnlyOnLeft()  -> entries that should be removed
+             *  diff.entriesOnlyOnRight() -> entries that should be added
+             */
+            // @formatter:on
+            sessionsBatch.addAll(createUpdateOps(diff.entriesDiffering()));
+            sessionsBatch.addAll(createDeleteOps(diff.entriesOnlyOnLeft()));
+            sessionsBatch.addAll(createInsertOps(diff.entriesOnlyOnRight()));
+        }
 
         return sessionsBatch;
     }
@@ -183,11 +187,16 @@ class SessionHelper {
 
         ScheduleDeserializer jsonDeserializer = new ScheduleDeserializer();
         HttpRequest request = HttpRequest.get(mUrl).userAgent(mUserAgent)
-                .acceptGzipEncoding().uncompress(true);
+                .acceptJson().acceptGzipEncoding().uncompress(true);
 
         if (request.ok()) {
             mapBuilder
                     .putAll(jsonDeserializer.fromInputStream(request.stream()));
+        } else if (!request.notModified()) {
+            // Anything that's not a 200 or a 304 should cause the
+            // synchronization code to fail fast
+            throw new IOException("Request failed: " + request.code() + " - "
+                    + request.message());
         }
 
         return mapBuilder.build();
