@@ -45,6 +45,7 @@ public final class SponsorsFragment extends BannerFragment {
                 new Banner(R.drawable.sonicwall, "http://www.sonicwall.com"),
                 new Banner(R.drawable.quantumleap, "http://www.quantumleap.it"),
                 new Banner(R.drawable.micso, "http://www.micso.it"),
+                new Banner(R.drawable.lum, "http://www.lum.it"),
                 new Banner(R.drawable.securenetwork, "http://www.securenetwork.it")
         });
         // @formatter:on
