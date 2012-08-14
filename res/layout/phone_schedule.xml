@@ -24,11 +24,9 @@
     android:orientation="vertical"
     tools:context=".schedule.ScheduleActivity" >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/sessionListFragment"
-        android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/item_list" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

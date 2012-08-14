@@ -28,9 +28,11 @@ import org.level28.android.moca.widget.ScheduleItemLayout;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
@@ -100,29 +102,33 @@ public class SessionListFragment extends SherlockFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        reloadFromArguments(savedInstanceState);
+        reloadFromArguments(getArguments());
     }
 
-    private void reloadFromArguments(Bundle savedInstanceState) {
+    private void reloadFromArguments(Bundle arguments) {
         // Release previous adapter
         setListAdapter(null);
 
-        // TODO: honor URI in fragment arguments
+        // Extract sessions Uri
+        final Intent intent = ScheduleActivity
+                .fragmentArgumentsToIntent(arguments);
+        final Uri sessionsUri = intent.getData();
 
         // Create and bind new list adapter
         mAdapter = new SessionsAdapter(getActivity());
 
         // Fire background loading of sessions
-        getLoaderManager().restartLoader(SessionsQuery._TOKEN,
-                savedInstanceState, this);
+        if (sessionsUri != null) {
+            getLoaderManager().restartLoader(SessionsQuery._TOKEN, arguments,
+                    this);
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // FIXME: localize this string
-        setEmptyText("No events?!?!");
+        setEmptyText(getActivity().getResources().getText(R.string.no_events));
 
         // If we have data waiting for us, display the list
         if (mAdapter != null && !mAdapter.isEmpty()) {
@@ -211,11 +217,12 @@ public class SessionListFragment extends SherlockFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // TODO: extract content uri from arguments
-        // TODO: perform day-based selection
+        // Get the URI for a Session cursor (most likely a day-based URI)
+        final Intent intent = ScheduleActivity.fragmentArgumentsToIntent(args);
+        final Uri sessionsUri = intent.getData();
         Loader<Cursor> loader = null;
         if (id == SessionsQuery._TOKEN) {
-            loader = new CursorLoader(getActivity(), Sessions.CONTENT_URI,
+            loader = new CursorLoader(getActivity(), sessionsUri,
                     SessionsQuery.PROJECTION, null, null, Sessions.DEFAULT_SORT);
         }
         return loader;
@@ -242,7 +249,9 @@ public class SessionListFragment extends SherlockFragment implements
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO
+        // TODO: fire a detail activity if we're running in single-pane mode or
+        // ask the parent activity to display the detail fragment if we're
+        // running in dual-pane mode
     }
 
     private SessionListFragment setEmptyText(CharSequence text) {

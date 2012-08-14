@@ -34,4 +34,10 @@
     <string name="no_tweets">Nessun tweet :-(</string>
     <string name="menu_directions">Ottieni indicazioni stradali</string>
     <string name="network_error">Si è verificato un errore di rete.</string>
+    <string name="no_events">Nessun evento disponibile. Si prega di controllare le impostazioni di sincronizzazione.</string>
+    <string-array name="scheduleDays">
+        <item>24 Agosto</item>
+        <item>25 Agosto</item>
+        <item>26 Agosto</item>
+    </string-array>
 </resources>

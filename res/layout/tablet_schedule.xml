@@ -21,20 +21,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:orientation="horizontal"
     android:divider="?android:attr/dividerHorizontal"
     android:showDividers="middle"
+    android:baselineAligned="false"
     tools:context=".ui.schedule.ScheduleActivity">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/sessionListFragment"
-        android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@layout/item_list" />
+        android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/sessionDetailsContainer"
