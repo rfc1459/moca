@@ -22,6 +22,8 @@
 package org.level28.android.moca.bitmaps;
 
 import static android.graphics.Bitmap.CompressFormat.PNG;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,9 +115,7 @@ public abstract class AbstractBitmapLoader {
      */
     public final void release(final boolean evictAll) {
         synchronized (this) {
-            if (mReleased) {
-                throw new IllegalStateException("BitmapLoader already released");
-            }
+            checkState(!mReleased, "BitmapLoader already released");
             mReleased = true;
             // From now on, every other thread still trying to access this
             // loader will fail with an IllegalStateException.
@@ -151,9 +151,7 @@ public abstract class AbstractBitmapLoader {
      *            the URL from which the avatar can be retrieved
      */
     public void load(final CacheableImageView view, final String url) {
-        if (view == null) {
-            throw new IllegalArgumentException("null ImageView");
-        }
+        checkNotNull(view, "ImageView may not be null");
 
         if (url == null) {
             setImage(mPlaceHolderDrawable, view);
@@ -165,7 +163,18 @@ public abstract class AbstractBitmapLoader {
         final int height = view.getHeight();
         final String cacheKey = getBitmapKey(url, width, height);
 
-        BitmapWrapper loadedImage = getBitmapFromL1Cache(cacheKey);
+        BitmapWrapper loadedImage;
+        try {
+            loadedImage = getBitmapFromL1Cache(cacheKey);
+        } catch (IllegalStateException e) {
+            // load() called after the loader has been finalized.
+            // The right thing to do would be to check for finalization as a
+            // precondition and propagate the IllegalStateException up the
+            // stack, but this would exacerbate a rare race condition between
+            // image loading and activity termination.
+            setImage(mPlaceHolderDrawable, view);
+            return;
+        }
         if (loadedImage != null && loadedImage.hasValidBitmap()) {
             // L1 cache hit - we're done
             setImage(loadedImage, view);
@@ -205,11 +214,18 @@ public abstract class AbstractBitmapLoader {
     }
 
     private BitmapWrapper getBitmapFromL1Cache(String key) {
+        synchronized (this) {
+            checkState(!mReleased, "BitmapLoader has been released");
+        }
         return mMemoryCache.get(key);
     }
 
     /** @hide */
     final BitmapWrapper getBitmapFromL2Cache(final String key) {
+        synchronized (this) {
+            checkState(!mReleased, "BitmapLoader has been released");
+        }
+
         DiskLruCache.Snapshot cacheSnapshot = null;
         try {
             // Do we have an L2 cache at all?
@@ -238,8 +254,7 @@ public abstract class AbstractBitmapLoader {
     void addBitmapToL1Cache(BitmapWrapper bitmapWrapper) {
         synchronized (this) {
             if (mReleased) {
-                // OOOOOPS
-                Log.e(LOG_TAG, "addBitmapToL1Cache called on finalized loader!");
+                // Do not log the error
                 return;
             }
         }
@@ -250,8 +265,7 @@ public abstract class AbstractBitmapLoader {
     void addBitmapToL2Cache(BitmapWrapper bitmapWrapper) {
         synchronized (this) {
             if (mReleased) {
-                // OOOOOPS
-                Log.e(LOG_TAG, "addBitmapToL2Cache called on finalized loader!");
+                // Do not log the error
                 return;
             }
         }
@@ -311,7 +325,14 @@ public abstract class AbstractBitmapLoader {
             }
 
             // Try L2 cache first
-            BitmapWrapper cachedBitmap = getBitmapFromL2Cache(mKey);
+            BitmapWrapper cachedBitmap;
+            try {
+                cachedBitmap = getBitmapFromL2Cache(mKey);
+            } catch (IllegalStateException e) {
+                // Prevent a stupid race condition between application
+                // termination and background loading from polluting the log
+                return null;
+            }
             if (cachedBitmap != null) {
                 return cachedBitmap;
             }
@@ -410,10 +431,10 @@ public abstract class AbstractBitmapLoader {
             digested = MessageDigest.getInstance("SHA-1").digest(
                     finalKey.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            // FIXME: Log a wtf
+            Log.wtf(LOG_TAG, "The runtime environment does not support UTF-8", e);
             return null;
         } catch (NoSuchAlgorithmException e) {
-            // FIXME: Log another wtf
+            Log.wtf(LOG_TAG, "The runtime environment does not support SHA-1", e);
             return null;
         }
 
