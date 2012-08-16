@@ -25,8 +25,11 @@ import org.level28.android.moca.BuildConfig;
 import org.level28.android.moca.R;
 import org.level28.android.moca.bitmaps.NetworkAvatarLoader;
 import org.level28.android.moca.bitmaps.SimpleBitmapLoader;
+import org.level28.android.moca.sync.MocaAuthenticator;
 import org.level28.android.moca.ui.map.MocaMap;
+import org.level28.android.moca.ui.schedule.ScheduleActivity;
 
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
@@ -93,6 +96,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         setContentView(R.layout.main);
 
+        // Ensure we don't have the ActionBar Home button enabled
+        getSupportActionBar().setHomeButtonEnabled(false);
+
         // Create a new loader for avatars
         mAvatarLoader = new NetworkAvatarLoader(this);
         // and a new loader for banners
@@ -158,6 +164,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         // Obtain the array of URLs for MOCA 2012 trailers
         mTrailers = getResources().getStringArray(R.array.trailer_urls);
+
+        // Check if we need to create the dummy account
+        AccountManager am = AccountManager.get(this);
+        if (!MocaAuthenticator.dummyAccountExists(am)) {
+            MocaAuthenticator.addDummyAccount(am);
+        }
 
         if (BuildConfig.DEBUG) {
             Log.v(LOG_TAG, "MainActivity awakened, have fun ;-)");
@@ -236,6 +248,9 @@ public class MainActivity extends SherlockFragmentActivity implements
         case R.id.menu_teaser_two:
         case R.id.menu_subliminal:
             startActivity(getIntentForTrailer(menuItemId));
+            return true;
+        case R.id.menu_schedule:
+            startActivity(new Intent(this, ScheduleActivity.class));
             return true;
         default:
             return false;

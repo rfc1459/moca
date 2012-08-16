@@ -55,6 +55,24 @@
         <item name="android:textColor">@color/tweet_timestamp</item>
     </style>
 
+    <style name="Schedule" />
+
+    <style name="Schedule.Title">
+        <item name="android:textSize">@dimen/font_size_default</item>
+        <item name="android:textColor">@color/schedule_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Schedule.Hosts">
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textColor">@color/schedule_secondary</item>
+    </style>
+
+    <style name="Schedule.Time">
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textColor">@color/schedule_time</item>
+    </style>
+
     <style name="Widget.TitlePageIndicator">
         <item name="android:background">@android:color/black</item>
         <item name="footerColor">@color/moca_orange</item>

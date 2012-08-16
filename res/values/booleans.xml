@@ -20,4 +20,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- True if the application is running in dual-pane mode (eg. on a tablet) -->
     <item type="bool" name="dualPaned">false</item>
+    <!-- True if the application is running on Honeycomb or later -->
+    <item type="bool" name="isHoneycomb">false</item>
 </resources>

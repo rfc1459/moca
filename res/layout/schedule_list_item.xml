@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ schedule_list_item.xml - Layout specifcation for Schedule entries
+ Copyright (C) 2012 Matteo Panella <morpheus@level28.org>
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<org.level28.android.moca.widget.ScheduleItemLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="48dip"
+    android:paddingLeft="8dip"
+    android:paddingRight="8dip"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle"
+    android:dividerPadding="8dip"
+    android:baselineAligned="false"
+    android:background="@drawable/schedule_background"
+    tools:context=".schedule.ScheduleActivity">
+
+    <TextView
+        android:id="@+id/scheduleTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        style="@style/Schedule.Time"
+        android:paddingRight="8dip" />
+
+    <View
+        android:id="@+id/dividerCompat"
+        android:layout_width="0.5dip"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dip"
+        android:layout_marginBottom="8dip"
+        android:background="@color/schedule_divider"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/scheduleContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="8dip"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/scheduleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Schedule.Title" />
+
+        <TextView
+            android:id="@+id/scheduleHost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Schedule.Hosts" />
+    </LinearLayout>
+</org.level28.android.moca.widget.ScheduleItemLayout>

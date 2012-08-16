@@ -29,6 +29,7 @@
     <string name="partners">Partners</string>
     <string name="sponsors">Sponsors</string>
     <string name="map">Map</string>
+    <string name="schedule">Schedule</string>
     <string name="menu_more">More</string>
     <string name="menu_locate">Enable location</string>
     <string name="menu_about">About</string>
@@ -39,4 +40,12 @@
     <string name="menu_trailers">Trailers</string>
     <string name="no_tweets">No tweets :-(</string>
     <string name="network_error">A network error occurred. Please try again.</string>
+    <string name="no_events">No events available. Please check the synchronization settings.</string>
+    <string name="session_details">Session details</string>
+    <string name="select_session">Please select a session</string>
+    <string-array name="scheduleDays">
+        <item>Aug 24th</item>
+        <item>Aug 25th</item>
+        <item>Aug 26th</item>
+    </string-array>
 </resources>

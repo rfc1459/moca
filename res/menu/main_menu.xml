@@ -19,6 +19,11 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
+        android:id="@+id/menu_schedule"
+        android:title="@string/schedule"
+        android:icon="@drawable/ic_menu_schedule"
+        android:showAsAction="never" />
+    <item
         android:id="@+id/menu_map"
         android:title="@string/map"
         android:icon="@drawable/ic_menu_map"

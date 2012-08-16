@@ -23,6 +23,7 @@
     <string name="partners">Partner</string>
     <string name="sponsors">Sponsor</string>
     <string name="map">Mappa</string>
+    <string name="schedule">Programma</string>
     <string name="menu_more">Altro</string>
     <string name="menu_locate">Attiva localizzazione</string>
     <string name="menu_about">Informazioni</string>
@@ -33,4 +34,12 @@
     <string name="no_tweets">Nessun tweet :-(</string>
     <string name="menu_directions">Ottieni indicazioni stradali</string>
     <string name="network_error">Si è verificato un errore di rete.</string>
+    <string name="no_events">Nessun evento disponibile. Si prega di controllare le impostazioni di sincronizzazione.</string>
+    <string name="session_details">Dettagli dell\'evento</string>
+    <string name="select_session">Selezionare un evento</string>
+    <string-array name="scheduleDays">
+        <item>24 Agosto</item>
+        <item>25 Agosto</item>
+        <item>26 Agosto</item>
+    </string-array>
 </resources>
