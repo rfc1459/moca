@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dip"
-    tools:context=".ui.schedule.SessionDetailActivity" >
+    tools:context=".ui.schedule.SessionDetailActivity">
 
     <LinearLayout
         android:id="@+id/sessionDetailsContainer"
@@ -40,7 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:drawablePadding="8dp" />
 
             <TextView
                 android:id="@+id/sessionTitle"
@@ -74,6 +75,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/select_session"/>
+        android:text="@string/select_session" />
 
 </LinearLayout>

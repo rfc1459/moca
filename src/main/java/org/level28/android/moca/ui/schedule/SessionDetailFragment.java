@@ -21,10 +21,14 @@
 
 package org.level28.android.moca.ui.schedule;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.level28.android.moca.util.ActivityUtils.fragmentArgumentsToIntent;
 import static org.level28.android.moca.util.ActivityUtils.intentToFragmentArguments;
 
+import java.util.Locale;
+
 import org.level28.android.moca.R;
+import org.level28.android.moca.model.Session.Language;
 import org.level28.android.moca.provider.ScheduleContract.Sessions;
 import org.level28.android.moca.util.ViewUtils;
 
@@ -36,6 +40,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,13 +56,14 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class SessionDetailFragment extends SherlockFragment implements
         LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = "SessionDetailFragment";
+
     private View mScheduleContainer;
     private View mEmptyText;
 
     private TextView mTime;
     private TextView mTitle;
     private TextView mHosts;
-    // TODO: mFlag (ImageView)
     private TextView mAbstract;
 
     private Cursor mCursor = null;
@@ -135,7 +141,6 @@ public class SessionDetailFragment extends SherlockFragment implements
         mTime = (TextView) view.findViewById(R.id.sessionTime);
         mTitle = (TextView) view.findViewById(R.id.sessionTitle);
         mHosts = (TextView) view.findViewById(R.id.sessionHosts);
-        // TODO: mFlag (ImageView)
         mAbstract = (TextView) view.findViewById(R.id.sessionAbstract);
     }
 
@@ -252,9 +257,16 @@ public class SessionDetailFragment extends SherlockFragment implements
                     .append(endTime).toString();
 
             mTime.setText(timeSpec);
+            // Set the language flag as a compound drawable of mTime.
+            // This is a very common layout optimization which shaves a bit of
+            // memory and *a lot* of CPU time required to compute the final
+            // layout
+            final int flagResId = getFlagResId(mCursor
+                    .getString(SessionDetailQuery.LANG));
+            mTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, flagResId);
+
             mTitle.setText(mCursor.getString(SessionDetailQuery.TITLE));
             mHosts.setText(mCursor.getString(SessionDetailQuery.HOSTS));
-            // TODO: language flag
 
             // Check for abstract presence
             if (mCursor.isNull(SessionDetailQuery.ABSTRACT)) {
@@ -281,6 +293,36 @@ public class SessionDetailFragment extends SherlockFragment implements
     }
 
     /**
+     * Extract the resource id for a language icon given the two-letter language
+     * id.
+     */
+    private int getFlagResId(final String language) {
+        // Precondition
+        checkNotNull(language);
+        Language lang = Language.IT;
+        try {
+            lang = Language.valueOf(language.toUpperCase(Locale.US));
+        } catch (IllegalArgumentException e) {
+            // Fall back to italian
+            Log.e(LOG_TAG, "Invalid value for session language", e);
+        }
+
+        final int flagResId;
+        switch (lang) {
+        case EN:
+            // Distinctions between en_US and en_UK are pointless, so stick with
+            // the Union Jack.
+            flagResId = R.drawable.ukflag;
+            break;
+        case IT:
+        default:
+            flagResId = R.drawable.itflag;
+            break;
+        }
+        return flagResId;
+    }
+
+    /**
      * Constant holder for session detail query.
      */
     private interface SessionDetailQuery {
@@ -297,7 +339,6 @@ public class SessionDetailFragment extends SherlockFragment implements
         int END = 1;
         int TITLE = 2;
         int HOSTS = 3;
-        @SuppressWarnings("unused")
         int LANG = 4;
         int ABSTRACT = 5;
     }
