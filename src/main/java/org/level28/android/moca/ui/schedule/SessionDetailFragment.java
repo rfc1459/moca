@@ -44,6 +44,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -65,6 +66,7 @@ public class SessionDetailFragment extends SherlockFragment implements
     private TextView mTitle;
     private TextView mHosts;
     private TextView mAbstract;
+    private ScrollView mAbstractContainer;
 
     private Cursor mCursor = null;
 
@@ -142,6 +144,8 @@ public class SessionDetailFragment extends SherlockFragment implements
         mTitle = (TextView) view.findViewById(R.id.sessionTitle);
         mHosts = (TextView) view.findViewById(R.id.sessionHosts);
         mAbstract = (TextView) view.findViewById(R.id.sessionAbstract);
+        mAbstractContainer = (ScrollView) view
+                .findViewById(R.id.sessionAbstractContainer);
     }
 
     @Override
@@ -150,6 +154,7 @@ public class SessionDetailFragment extends SherlockFragment implements
         mTime = null;
         mHosts = null;
         mAbstract = null;
+        mAbstractContainer = null;
 
         super.onDestroyView();
     }
@@ -271,12 +276,13 @@ public class SessionDetailFragment extends SherlockFragment implements
             // Check for abstract presence
             if (mCursor.isNull(SessionDetailQuery.ABSTRACT)) {
                 // No abstract, hide it
-                ViewUtils.setGone(mAbstract, true);
+                ViewUtils.setGone(mAbstractContainer, true);
             } else {
                 // We have an abstract, display it!
                 mAbstract.setText(mCursor
                         .getString(SessionDetailQuery.ABSTRACT));
-                ViewUtils.setGone(mAbstract, false);
+                mAbstractContainer.scrollTo(0, 0);
+                ViewUtils.setGone(mAbstractContainer, false);
             }
             // Display session details
             ViewUtils.setGone(mEmptyText, true);
