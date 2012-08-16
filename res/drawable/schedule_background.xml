@@ -19,6 +19,11 @@
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_enabled="false" android:state_pressed="true"
+        android:drawable="@android:color/transparent" />
+    <item android:state_enabled="false" android:drawable="@android:color/transparent" />
+    <item android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:state_focused="true" android:drawable="@android:color/transparent" />
     <item android:state_activated="true" android:drawable="@drawable/list_activated_holo" />
     <item app:state_current="true" android:drawable="@drawable/schedule_current" />
     <item android:drawable="@color/schedule_background" />

@@ -96,6 +96,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         setContentView(R.layout.main);
 
+        // Ensure we don't have the ActionBar Home button enabled
+        getSupportActionBar().setHomeButtonEnabled(false);
+
         // Create a new loader for avatars
         mAvatarLoader = new NetworkAvatarLoader(this);
         // and a new loader for banners

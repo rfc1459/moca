@@ -34,6 +34,8 @@
     <string name="menu_directions">Ottieni indicazioni stradali</string>
     <string name="network_error">Si è verificato un errore di rete.</string>
     <string name="no_events">Nessun evento disponibile. Si prega di controllare le impostazioni di sincronizzazione.</string>
+    <string name="session_details">Dettagli dell\'evento</string>
+    <string name="select_session">Selezionare un evento</string>
     <string-array name="scheduleDays">
         <item>24 Agosto</item>
         <item>25 Agosto</item>

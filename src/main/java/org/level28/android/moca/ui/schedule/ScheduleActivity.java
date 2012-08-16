@@ -21,19 +21,23 @@
 
 package org.level28.android.moca.ui.schedule;
 
+import static android.widget.AdapterView.INVALID_ROW_ID;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.level28.android.moca.R;
 import org.level28.android.moca.provider.ScheduleContract;
+import org.level28.android.moca.provider.ScheduleContract.Sessions;
 import org.level28.android.moca.sync.MocaAuthenticator;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
@@ -48,10 +52,18 @@ import com.actionbarsherlock.view.MenuItem;
  * @author Matteo Panella
  */
 public class ScheduleActivity extends SherlockFragmentActivity implements
-        ActionBar.OnNavigationListener {
+        ActionBar.OnNavigationListener,
+        SessionListFragment.OnSessionSelectedListener {
 
-    private static final String URI_KEY = "_uri";
     private static final String CURRENT_DAY_KEY = "currentDay";
+    private static final String CURRENT_SESSION_KEY = "currentSession";
+    private static final String SESSION_LIST_ID_KEY = "sessionListId";
+
+    static final String DETAILS_FRAGMENT_TAG = "sessionDetails";
+
+    // Used in dual-pane mode only
+    private String mCurrentSessionUUID;
+    private long mCurrentSessionRowId = INVALID_ROW_ID;
 
     // Day 2 sunrise: 2012-08-25T00:00:00+02:00
     private static final long DAY2_SUNRISE = 1345845600000L;
@@ -62,33 +74,38 @@ public class ScheduleActivity extends SherlockFragmentActivity implements
 
     private int mCurrentDay;
 
+    private SessionListFragment mSessionListFragment;
+    private SessionDetailFragment mSessionDetailsFragment;
+
     private SpinnerAdapter mSpinnerAdapter;
+
+    private boolean mDualPane = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ActionBar actionBar = getSupportActionBar();
+        setContentView(R.layout.schedule);
+
+        // Check if we're running in dual-pane mode
+        mDualPane = getResources().getBoolean(R.bool.dualPaned);
+
+        // Lookup our fragments
+        final FragmentManager fm = getSupportFragmentManager();
+        mSessionListFragment = (SessionListFragment) fm
+                .findFragmentById(R.id.sessionListFragment);
+        mSessionDetailsFragment = (SessionDetailFragment) fm
+                .findFragmentById(R.id.sessionDetailsFragment);
+
+        // Session list should be selectable only in dual-pane mode
+        mSessionListFragment.setSelectable(mDualPane);
 
         // Unpack day labels from resources and create a SpinnerAdapter suitable
         // for the ActionBar navigation mode
         mScheduleDays = getResources().getTextArray(R.array.scheduleDays);
-        mSpinnerAdapter = new ArrayAdapter<CharSequence>(
-                actionBar.getThemedContext(),
+        mSpinnerAdapter = new ArrayAdapter<CharSequence>(getSupportActionBar()
+                .getThemedContext(),
                 com.actionbarsherlock.R.layout.sherlock_spinner_dropdown_item,
                 mScheduleDays);
-
-        // As usual, enable standard application icon navigation
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        // ... but hide the activity title, since it will be replaced by the
-        // navigation mode spinner
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        // Enable navigation mode
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
-
-        setContentView(R.layout.schedule);
 
         // Choose a sensible default day based on current date/time
         final long now = System.currentTimeMillis();
@@ -104,22 +121,38 @@ public class ScheduleActivity extends SherlockFragmentActivity implements
             // Force a refresh on startup
             triggerRefresh();
         } else {
-            // Restore selected day
-            final int currentDay = savedInstanceState.getInt(CURRENT_DAY_KEY, mCurrentDay);
-            // Safety check
-            if (currentDay > 0 && currentDay < mScheduleDays.length) {
-                mCurrentDay = currentDay;
-            }
+            restoreState(savedInstanceState);
         }
-        // This will invoke refreshSchedule() through onNavigationItemSelected()
-        actionBar.setSelectedNavigationItem(mCurrentDay - 1);
+
+        // Perform ActionBar setup
+        setupActionBar();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mSessionListFragment.setOnSessionSelectedListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        mSessionListFragment.setOnSessionSelectedListener(null);
+        super.onStop();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Retain the currently selected day across configuration changes
+        // Retain the currently selected day and session id (if any)
         outState.putInt(CURRENT_DAY_KEY, mCurrentDay);
+        outState.putString(CURRENT_SESSION_KEY, mCurrentSessionUUID);
+        outState.putLong(SESSION_LIST_ID_KEY, mCurrentSessionRowId);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoreState(savedInstanceState);
     }
 
     @Override
@@ -139,7 +172,7 @@ public class ScheduleActivity extends SherlockFragmentActivity implements
         switch (item.getItemId()) {
         case android.R.id.home:
             // Go up the stack
-            finish();
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         case R.id.menu_refresh:
             triggerRefresh();
@@ -153,49 +186,16 @@ public class ScheduleActivity extends SherlockFragmentActivity implements
     public boolean onNavigationItemSelected(final int position, final long id) {
         checkElementIndex(position, mScheduleDays.length);
         // Update the current day and refresh all fragments
-        mCurrentDay = position + 1;
-        refreshSchedule();
+        setScheduleDay(position + 1);
         return true;
     }
 
-    /**
-     * Convert a fragment arguments bundle into an intent.
-     */
-    public static Intent fragmentArgumentsToIntent(Bundle arguments) {
-        Intent intent = new Intent();
-        if (arguments == null) {
-            return intent;
-        }
-
-        final Uri data = arguments.getParcelable(URI_KEY);
-        if (data != null) {
-            intent.setData(data);
-        }
-
-        intent.putExtras(arguments);
-        intent.removeExtra(URI_KEY);
-        return intent;
-    }
-
-    /**
-     * Inverse operation of {@link #fragmentArgumentsToIntent(Bundle)}.
-     */
-    public static Bundle intentToFragmentArguments(Intent intent) {
-        Bundle arguments = new Bundle();
-        if (intent == null) {
-            return arguments;
-        }
-
-        final Uri data = intent.getData();
-        if (data != null) {
-            arguments.putParcelable(URI_KEY, data);
-        }
-
-        final Bundle extras = intent.getExtras();
-        if (extras != null) {
-            arguments.putAll(extras);
-        }
-        return arguments;
+    @Override
+    public void onSessionSelected(final String sessionId, final long listItemId) {
+        checkNotNull(sessionId);
+        // Store the rowId for dual-pane mode lifecycle
+        mCurrentSessionRowId = listItemId;
+        displaySessionDetails(sessionId);
     }
 
     /**
@@ -211,23 +211,92 @@ public class ScheduleActivity extends SherlockFragmentActivity implements
     }
 
     /**
-     * Refresh activity UI on schedule day selection.
+     * Restore activity state during some of the more involved lifecycle events.
+     * 
+     * @param savedInstanceState
+     *            the previously saved state of this activity
      */
-    private void refreshSchedule() {
-        final Uri dayUri = ScheduleContract.Sessions
-                .buildSessionsDayDirUri(mCurrentDay);
+    private void restoreState(Bundle savedInstanceState) {
+        // Restore selected day
+        final int currentDay = savedInstanceState.getInt(CURRENT_DAY_KEY,
+                mCurrentDay);
+        // Safety check
+        if (currentDay > 0 && currentDay < mScheduleDays.length) {
+            mCurrentDay = currentDay;
+        }
+        // Restore selected session id
+        mCurrentSessionUUID = savedInstanceState.getString(CURRENT_SESSION_KEY);
 
-        // Create a new SessionListFragment for the current schedule day
-        final Fragment sessionsList = new SessionListFragment();
-        sessionsList.setArguments(intentToFragmentArguments(new Intent(
-                Intent.ACTION_VIEW, dayUri)));
+        // Now update the UI
+        mSessionListFragment.loadScheduleForDay(mCurrentDay);
+        if (mDualPane) {
+            // Restore session list id
+            mCurrentSessionRowId = savedInstanceState.getLong(
+                    SESSION_LIST_ID_KEY, INVALID_ROW_ID);
+            mSessionListFragment.setSelectedId(mCurrentSessionRowId);
+            displaySessionDetails(mCurrentSessionUUID);
+        }
+    }
 
-        // Setup and execute the fragment transaction
-        final FragmentTransaction ft = getSupportFragmentManager()
-                .beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.sessionListFragment, sessionsList);
-        // TODO: reset detail fragment in dual-pane layout
-        ft.commit();
+    /**
+     * Setup the action bar for list navigation mode.
+     */
+    private void setupActionBar() {
+        final ActionBar actionBar = getSupportActionBar();
+        // As usual, enable standard application icon navigation
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // ... but hide the activity title, since it will be replaced by the
+        // navigation mode spinner
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        // Enable navigation mode
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
+
+        // This will invoke refreshSchedule() through onNavigationItemSelected()
+        actionBar.setSelectedNavigationItem(mCurrentDay - 1);
+    }
+
+    /**
+     * Notify the {@link SessionListFragment} of a day change.
+     * 
+     * @param day
+     *            the day that should be displayed
+     */
+    private void setScheduleDay(final int day) {
+        mCurrentDay = day;
+
+        // Update the schedule fragment
+        mSessionListFragment.loadScheduleForDay(mCurrentDay);
+
+        if (mDualPane) {
+            // Clear the details fragment
+            displaySessionDetails(null);
+        }
+    }
+
+    /**
+     * Display details for the given Session.
+     * <p>
+     * Depending on the UI mode, the details will be shown inline or a new
+     * activity will be launched.
+     * 
+     * @param sessionId
+     *            UUID of the session
+     */
+    private void displaySessionDetails(final String sessionId) {
+        mCurrentSessionUUID = sessionId;
+        if (mDualPane) {
+            mSessionDetailsFragment.loadSessionDetails(sessionId);
+        } else {
+            // In single-pane mode we can't have a NULL sessionId
+            checkNotNull(sessionId);
+            checkArgument(!TextUtils.isEmpty(sessionId),
+                    "Session ID may not be empty");
+            // Spawn the details activity
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Sessions.buildSessionUri(sessionId)));
+        }
     }
 }

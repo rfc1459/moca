@@ -23,7 +23,9 @@ package org.level28.android.moca.util;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import android.content.Context;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 
 /**
  * Utility class containing various support functions for views.
@@ -53,6 +55,29 @@ public final class ViewUtils {
             view.setVisibility(GONE);
         } else if (!gone && current != VISIBLE) {
             view.setVisibility(VISIBLE);
+        }
+    }
+
+    /**
+     * Fade-in a view.
+     * 
+     * @param context
+     *            the context from which the animation should be loaded
+     * @param view
+     *            the view that should be faded in
+     * @param animate
+     *            {@code true} if the animation should actually take place,
+     *            {@code false} otherwise
+     */
+    public static void fadeIn(final Context context, final View view,
+            final boolean animate) {
+        if (view != null) {
+            if (animate) {
+                view.startAnimation(AnimationUtils.loadAnimation(context,
+                        android.R.anim.fade_in));
+            } else {
+                view.clearAnimation();
+            }
         }
     }
 }

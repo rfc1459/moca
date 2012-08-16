@@ -29,7 +29,20 @@
             </intent-filter>
         </activity>
         <activity android:exported="false" android:label="@string/map" android:name=".ui.map.MocaMap"/>
-        <activity android:exported="false" android:label="@string/schedule" android:name=".ui.schedule.ScheduleActivity" android:theme="@style/Theme.Sherlock.Light.DarkActionBar"/>
+        <activity android:exported="false" android:label="@string/schedule" android:launchMode="singleTask" android:name=".ui.schedule.ScheduleActivity" android:theme="@style/Theme.Sherlock.Light.DarkActionBar">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ui.MainActivity"/>
+        </activity>
+
+        <!-- Session details activity (used only in single-pane mode) -->
+        <activity android:exported="false" android:label="@string/session_details" android:name=".ui.schedule.SessionDetailActivity" android:theme="@style/Theme.Sherlock.Light.DarkActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="vnd.android.cursor.item/vnd.moca.session"/>
+            </intent-filter>
+
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ui.schedule.ScheduleActivity"/>
+        </activity>
 
         <!-- The authenticator service -->
         <service android:exported="false" android:name=".service.MocaAuthenticatorService" android:process=":auth">

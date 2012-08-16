@@ -21,6 +21,12 @@
 
 package org.level28.android.moca.ui.schedule;
 
+import static android.widget.Adapter.NO_SELECTION;
+import static android.widget.AdapterView.INVALID_ROW_ID;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.level28.android.moca.util.ActivityUtils.fragmentArgumentsToIntent;
+import static org.level28.android.moca.util.ActivityUtils.intentToFragmentArguments;
+
 import org.level28.android.moca.R;
 import org.level28.android.moca.provider.ScheduleContract.Sessions;
 import org.level28.android.moca.util.ViewUtils;
@@ -44,7 +50,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -65,9 +70,27 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class SessionListFragment extends SherlockFragment implements
         LoaderCallbacks<Cursor> {
 
+    /**
+     * Listener for session selected events.
+     */
+    interface OnSessionSelectedListener {
+        /**
+         * Called whenever a session is selected.
+         * 
+         * @param sessionId
+         *            the UUID of the session
+         * @param listItemId
+         *            the RowID of the session returned by SQLite
+         */
+        public void onSessionSelected(final String sessionId,
+                final long listItemId);
+    }
+
     private boolean isHoneycomb;
 
     private CursorAdapter mAdapter;
+
+    private OnSessionSelectedListener mListener;
 
     // The usual suspects
     private ListView mListView;
@@ -75,6 +98,11 @@ public class SessionListFragment extends SherlockFragment implements
     private ProgressBar mProgressBar;
 
     private boolean mListShown;
+
+    private long mCurrentRowId = INVALID_ROW_ID;
+
+    private boolean mDualPane = false;
+    private boolean mDataValid = false;
 
     /**
      * Content observer for sessions.
@@ -105,17 +133,23 @@ public class SessionListFragment extends SherlockFragment implements
         reloadFromArguments(getArguments());
     }
 
+    /**
+     * Reload contents from the given fragment arguments.
+     * 
+     * @param arguments
+     *            a bundle containing the target URI for this fragment
+     */
     private void reloadFromArguments(Bundle arguments) {
         // Release previous adapter
         setListAdapter(null);
 
         // Extract sessions Uri
-        final Intent intent = ScheduleActivity
-                .fragmentArgumentsToIntent(arguments);
+        final Intent intent = fragmentArgumentsToIntent(arguments);
         final Uri sessionsUri = intent.getData();
 
         // Create and bind new list adapter
         mAdapter = new SessionsAdapter(getActivity());
+        // setListAdapter(mAdapter);
 
         // Fire background loading of sessions
         if (sessionsUri != null) {
@@ -208,6 +242,12 @@ public class SessionListFragment extends SherlockFragment implements
         super.onDestroyView();
     }
 
+    /**
+     * Bind a new {@link CursorAdapter} to this fragment.
+     * 
+     * @param adapter
+     *            the new adapter
+     */
     public void setListAdapter(CursorAdapter adapter) {
         mAdapter = adapter;
         if (mListView != null) {
@@ -215,10 +255,20 @@ public class SessionListFragment extends SherlockFragment implements
         }
     }
 
+    /**
+     * Bind a new {@link OnSessionSelectedListener} to this fragment.
+     * 
+     * @param listener
+     *            the new listener
+     */
+    public void setOnSessionSelectedListener(OnSessionSelectedListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Get the URI for a Session cursor (most likely a day-based URI)
-        final Intent intent = ScheduleActivity.fragmentArgumentsToIntent(args);
+        final Intent intent = fragmentArgumentsToIntent(args);
         final Uri sessionsUri = intent.getData();
         Loader<Cursor> loader = null;
         if (id == SessionsQuery._TOKEN) {
@@ -234,6 +284,12 @@ public class SessionListFragment extends SherlockFragment implements
             return;
         }
 
+        // We do have valid data now
+        mDataValid = true;
+
+        // The list adapter should be (re)set here...
+        setListAdapter(mAdapter);
+
         final int token = loader.getId();
         if (token == SessionsQuery._TOKEN) {
             mAdapter.changeCursor(cursor);
@@ -245,14 +301,108 @@ public class SessionListFragment extends SherlockFragment implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // This space intentionally left blank
+        // We don't have valid data anymore
+        mDataValid = false;
     }
 
+    /**
+     * Callback for ListView item click events.
+     */
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO: fire a detail activity if we're running in single-pane mode or
-        // ask the parent activity to display the detail fragment if we're
-        // running in dual-pane mode
+        if (!isUsable()) {
+            return;
+        }
+
+        // Extract the session UUID
+        final Cursor cursor = (Cursor) mAdapter.getItem(position);
+        final String sessionId = cursor.getString(SessionsQuery.SESSION_ID);
+
+        if (mListener != null) {
+            // We have an event listener, send it the session UUID and RowID
+            mListener.onSessionSelected(sessionId, id);
+        }
     }
+
+    /**
+     * Change list choice mode.
+     * 
+     * @param selectable
+     *            {@code true} if the parent activity is operating in dual-pane
+     *            mode and the list should be selectable, {@code false}
+     *            otherwise
+     */
+    public void setSelectable(final boolean selectable) {
+        if (selectable) {
+            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            mDualPane = true;
+        } else {
+            mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            mDualPane = false;
+        }
+    }
+
+    /**
+     * Change the currently checked row in the list.
+     * <p>
+     * This method is only meaningful in dual-pane mode and will defer its
+     * execution until there is valid data.
+     * 
+     * @param selectedRowId
+     *            the RowID of the entry that should be checked
+     */
+    void setSelectedId(final long selectedRowId) {
+        mCurrentRowId = selectedRowId;
+        // Perform the actual selection only iff we have valid data, otherwise
+        // defer it after a successful load operation
+        if (mDataValid) {
+            setCheckedItem(selectedRowId);
+            mCurrentRowId = INVALID_ROW_ID;
+        }
+    }
+
+    /**
+     * Carry out the actual row selection.
+     * 
+     * @param rowId
+     *            the RowID of the entry that should be checked
+     */
+    private void setCheckedItem(final long rowId) {
+        if (mListView != null && mDualPane) {
+            int position = NO_SELECTION;
+            // There is no way around this ugly loop :-(
+            for (int i = 0; i < mAdapter.getCount(); i++) {
+                if (mAdapter.getItemId(i) == rowId) {
+                    position = i;
+                    break;
+                }
+            }
+            if (position != NO_SELECTION) {
+                mListView.setItemChecked(position, true);
+            }
+        }
+    }
+
+    /**
+     * Load all sessions scheduled for the given day.
+     */
+    void loadScheduleForDay(final int day) {
+        // Better safe than sorry
+        checkArgument(day >= 1 && day <= 3, "Day out of range: %s", day);
+
+        if (!isUsable()) {
+            return;
+        }
+
+        // Build new arguments for our loader
+        final Bundle loaderArgs = intentToFragmentArguments(new Intent(
+                Intent.ACTION_VIEW, Sessions.buildSessionsDayDirUri(day)));
+
+        // Restart the loader
+        reloadFromArguments(loaderArgs);
+    }
+
+    // Almost all of the following methods are direct copies of the ones in
+    // ItemListFragment. Check that class for documentation.
 
     private SessionListFragment setEmptyText(CharSequence text) {
         if (mEmptyView != null) {
@@ -266,12 +416,7 @@ public class SessionListFragment extends SherlockFragment implements
     }
 
     private SessionListFragment fadeIn(final View view, final boolean animate) {
-        if (view != null)
-            if (animate)
-                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
-            else
-                view.clearAnimation();
+        ViewUtils.fadeIn(getActivity(), view, animate);
         return this;
     }
 
@@ -289,6 +434,12 @@ public class SessionListFragment extends SherlockFragment implements
             final boolean animate) {
         if (!isUsable()) {
             return this;
+        }
+
+        // Check for a pending checked item change operation
+        if (mCurrentRowId != INVALID_ROW_ID) {
+            setCheckedItem(mCurrentRowId);
+            mCurrentRowId = INVALID_ROW_ID;
         }
 
         if (shown == mListShown) {
@@ -375,7 +526,6 @@ public class SessionListFragment extends SherlockFragment implements
     /**
      * Little neat holder for our Cursor-related constants.
      */
-    @SuppressWarnings("unused")
     private interface SessionsQuery {
         /**
          * Loader token.
@@ -386,18 +536,18 @@ public class SessionListFragment extends SherlockFragment implements
          * Projection used by the ContentProvider.
          */
         String[] PROJECTION = { BaseColumns._ID, Sessions.SESSION_ID,
-                Sessions.SESSION_TITLE, Sessions.SESSION_DAY,
-                Sessions.SESSION_START, Sessions.SESSION_END,
-                Sessions.SESSION_HOSTS, Sessions.SESSION_LANG, };
+                Sessions.SESSION_TITLE, Sessions.SESSION_START,
+                Sessions.SESSION_END, Sessions.SESSION_HOSTS, };
 
         // Column offsets
+        // _ID has to be part of the projection, otherwise CursorAdapter will
+        // crap out badly.
+        @SuppressWarnings("unused")
         int _ID = 0;
         int SESSION_ID = 1;
         int TITLE = 2;
-        int DAY = 3;
-        int START = 4;
-        int END = 5;
-        int HOSTS = 6;
-        int LANG = 7;
+        int START = 3;
+        int END = 4;
+        int HOSTS = 5;
     }
 }

@@ -27,16 +27,20 @@
     android:baselineAligned="false"
     tools:context=".ui.schedule.ScheduleActivity">
 
-    <FrameLayout
+    <fragment
         android:id="@+id/sessionListFragment"
+        android:name="org.level28.android.moca.ui.schedule.SessionListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        tools:layout="@layout/item_list" />
 
-    <FrameLayout
-        android:id="@+id/sessionDetailsContainer"
+    <fragment
+        android:id="@+id/sessionDetailsFragment"
+        android:name="org.level28.android.moca.ui.schedule.SessionDetailFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        tools:layout="@layout/session_detail" />
 
 </LinearLayout>
