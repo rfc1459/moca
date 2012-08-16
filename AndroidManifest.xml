@@ -54,7 +54,7 @@
         </service>
 
         <!-- SyncProvider -->
-        <service android:exported="true" android:name=".service.SyncService" tools:ignore="ExportedService">
+        <service android:exported="true" android:name=".service.SyncService" android:process=":sync" tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
