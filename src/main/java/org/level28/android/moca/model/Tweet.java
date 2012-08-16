@@ -24,6 +24,7 @@ package org.level28.android.moca.model;
 import java.util.Date;
 
 import android.provider.BaseColumns;
+import android.util.FloatMath;
 
 import com.google.android.maps.GeoPoint;
 
@@ -63,8 +64,8 @@ public final class Tweet {
         }
 
         public GeoPoint getPoint() {
-            final int microlat = (int) Math.floor(lat * 1e6f);
-            final int microlon = (int) Math.floor(lon * 1e6f);
+            final int microlat = (int) FloatMath.floor(lat * 1e6f);
+            final int microlon = (int) FloatMath.floor(lon * 1e6f);
             return new GeoPoint(microlat, microlon);
         }
     }

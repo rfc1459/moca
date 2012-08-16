@@ -33,7 +33,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
@@ -337,12 +336,7 @@ public abstract class ItemListFragment<E> extends SherlockFragment implements
     }
 
     private ItemListFragment<E> fadeIn(final View view, final boolean animate) {
-        if (view != null)
-            if (animate)
-                view.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                        android.R.anim.fade_in));
-            else
-                view.clearAnimation();
+        ViewUtils.fadeIn(getActivity(), view, animate);
         return this;
     }
 
