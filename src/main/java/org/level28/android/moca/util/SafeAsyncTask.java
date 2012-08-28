@@ -18,6 +18,8 @@
 
 package org.level28.android.moca.util;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import com.google.common.collect.Lists;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -195,10 +199,8 @@ public abstract class SafeAsyncTask<ResultT> implements Callable<ResultT> {
      * @see FutureTask#cancel(boolean)
      */
     public boolean cancel(boolean mayInterruptIfRunning) {
-        if (mFuture == null) {
-            throw new UnsupportedOperationException(
-                    "You cannot cancel this task before calling future()");
-        }
+        checkState(mFuture != null,
+                "You cannot cancel this task before calling future()");
         return mFuture.cancel(mayInterruptIfRunning);
     }
 
@@ -405,8 +407,7 @@ public abstract class SafeAsyncTask<ResultT> implements Callable<ResultT> {
         // @formatter:off
         private void fixupStackTrace(final Throwable e) {
             if (mParent.mLaunchLocation != null) {
-                final ArrayList<StackTraceElement> stack = new ArrayList<StackTraceElement>(
-                        Arrays.asList(e.getStackTrace()));
+                final ArrayList<StackTraceElement> stack = Lists.newArrayList(Arrays.asList(e.getStackTrace()));
                 stack.addAll(Arrays.asList(mParent.mLaunchLocation));
                 e.setStackTrace(stack.toArray(new StackTraceElement[stack.size()]));
             }

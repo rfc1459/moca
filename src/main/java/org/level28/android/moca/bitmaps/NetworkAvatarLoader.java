@@ -70,7 +70,7 @@ public final class NetworkAvatarLoader extends AbstractBitmapLoader {
                 .acceptGzipEncoding().uncompress(true);
 
         if (!request.ok() || request.contentLength() == 0) {
-            // TODO: log the error
+            // Log the error in debug builds
             if (BuildConfig.DEBUG) {
                 Log.e(LOG_TAG, "Error while fetching "
                         + url

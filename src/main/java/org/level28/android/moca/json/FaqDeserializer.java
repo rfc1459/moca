@@ -28,6 +28,7 @@ import java.util.List;
 import org.level28.android.moca.model.FaqEntry;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 
 /**
  * JSON deserializer for FAQ entries.
@@ -54,7 +55,7 @@ public final class FaqDeserializer extends
         }
 
         // I miss list comprehensions :-(
-        ArrayList<FaqEntry> result = new ArrayList<FaqEntry>();
+        ArrayList<FaqEntry> result = Lists.newArrayList();
         for (JsonNode node : root) {
             if (node == null || node.isNull()) {
                 throw new JsonDeserializerException("null objectRoot");

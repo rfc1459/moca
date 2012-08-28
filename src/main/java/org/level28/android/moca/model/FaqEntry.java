@@ -21,6 +21,10 @@
 
 package org.level28.android.moca.model;
 
+import static com.google.common.base.Objects.equal;
+
+import com.google.common.base.Objects;
+
 /**
  * A FAQ entry.
  * 
@@ -52,18 +56,13 @@ public final class FaqEntry {
             return false;
         }
         FaqEntry other = (FaqEntry) o;
-        return this.id == other.id && this.category.equals(other.category)
-                && this.question.equals(other.question)
-                && this.answer.equals(other.answer);
+        return id == other.id && equal(category, other.category)
+                && equal(question, other.question)
+                && equal(answer, other.answer);
     }
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 31 * result + Integer.valueOf(id).hashCode();
-        result = 31 * result + category.hashCode();
-        result = 31 * result + question.hashCode();
-        result = 31 * result + answer.hashCode();
-        return result;
+        return Objects.hashCode(id, category, question, answer);
     }
 }

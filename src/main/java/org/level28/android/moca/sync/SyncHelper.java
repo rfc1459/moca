@@ -38,6 +38,8 @@ import android.net.ConnectivityManager;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.google.common.collect.Lists;
+
 /**
  * Data synchronization helper.
  * <p>
@@ -64,27 +66,32 @@ class SyncHelper {
     /**
      * Synchronize against a TMA-1 server.
      */
-    public void performSync(final SyncResult syncResult) throws IOException, JsonDeserializerException {
+    public void performSync(final SyncResult syncResult) throws IOException,
+            JsonDeserializerException {
         final ContentResolver resolver = mContext.getContentResolver();
-        ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         // Perform synchronization only if we're online
         if (isOnline()) {
             if (BuildConfig.DEBUG) {
-                Log.i(LOG_TAG, "We're online, performing actual synchronization");
+                Log.i(LOG_TAG,
+                        "We're online, performing actual synchronization");
             }
 
             // Synchronize sessions
-            SessionHelper sessionHelper = new SessionHelper(SCHEDULE_URL, mUserAgent, resolver);
+            SessionHelper sessionHelper = new SessionHelper(SCHEDULE_URL,
+                    mUserAgent, resolver);
             batch.addAll(sessionHelper.synchronizeSessions());
 
             // Apply the batch in a single transaction
             try {
                 resolver.applyBatch(ScheduleContract.CONTENT_AUTHORITY, batch);
             } catch (RemoteException e) {
-                throw new RuntimeException("Problem applying batch operation", e);
+                throw new RuntimeException("Problem applying batch operation",
+                        e);
             } catch (OperationApplicationException e) {
-                throw new RuntimeException("Problem applying batch operation", e);
+                throw new RuntimeException("Problem applying batch operation",
+                        e);
             }
             // We're done (hopefully)
             if (BuildConfig.DEBUG) {

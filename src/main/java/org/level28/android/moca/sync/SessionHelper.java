@@ -67,7 +67,8 @@ class SessionHelper {
      */
     List<ContentProviderOperation> synchronizeSessions() throws IOException,
             JsonDeserializerException {
-        final ArrayList<ContentProviderOperation> sessionsBatch = new ArrayList<ContentProviderOperation>();
+        final ArrayList<ContentProviderOperation> sessionsBatch = Lists
+                .newArrayList();
 
         // Get a snapshot of all sessions stored in the database
         final Map<String, Session> localSessions = getSessionsSnapshot();

@@ -21,6 +21,8 @@
 
 package org.level28.android.moca.bitmaps;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.ref.WeakReference;
 
 import org.level28.android.moca.MocaApp;
@@ -64,9 +66,7 @@ public final class SimpleBitmapLoader {
      * @param resId resource id for the bitmap
      */
     public void load(final CacheableImageView view, final int resId) {
-        if (view == null) {
-            throw new IllegalArgumentException("null ImageView");
-        }
+        checkNotNull(view, "view may not be null");
 
         final String key = new StringBuilder("local:").append(resId).toString();
 

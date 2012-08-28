@@ -28,6 +28,7 @@ import java.util.List;
 import org.level28.android.moca.model.HomeSection;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 
 /**
  * JSON deserializer for Home screen contents.
@@ -51,7 +52,7 @@ public class HomeDeserializer extends
             throw new JsonDeserializerException("Root node is not an array");
         }
 
-        ArrayList<HomeSection> result = new ArrayList<HomeSection>();
+        ArrayList<HomeSection> result = Lists.newArrayList();
         for (JsonNode node : root) {
             if (!node.isObject()) {
                 throw new JsonDeserializerException(

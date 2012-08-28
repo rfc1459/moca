@@ -24,10 +24,13 @@
 
 package org.level28.android.moca.util;
 
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.level28.android.moca.BuildConfig;
@@ -38,6 +41,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 /**
  * Helper for building selection clauses for {@link SQLiteDatabase}. Each
  * appended clause is combined using {@code AND}. This class is <em>not</em>
@@ -47,9 +53,9 @@ public class SelectionBuilder {
     private static final String TAG = "SelectionBuilder";
 
     private String mTable = null;
-    private Map<String, String> mProjectionMap = new HashMap<String, String>();
+    private Map<String, String> mProjectionMap = Maps.newHashMap();
     private StringBuilder mSelection = new StringBuilder();
-    private ArrayList<String> mSelectionArgs = new ArrayList<String>();
+    private ArrayList<String> mSelectionArgs = Lists.newArrayList();
 
     /**
      * Reset any internal state, allowing this builder to be recycled.
@@ -67,10 +73,8 @@ public class SelectionBuilder {
      */
     public SelectionBuilder where(String selection, String... selectionArgs) {
         if (TextUtils.isEmpty(selection)) {
-            if (selectionArgs != null && selectionArgs.length > 0) {
-                throw new IllegalArgumentException(
-                        "Valid selection required when including arguments=");
-            }
+            checkArgument(selectionArgs == null || selectionArgs.length == 0,
+                    "Valid selection required when including arguments=");
 
             // Shortcut when clause is empty
             return this;
@@ -94,9 +98,7 @@ public class SelectionBuilder {
     }
 
     private void assertTable() {
-        if (mTable == null) {
-            throw new IllegalStateException("Table not specified");
-        }
+        checkState(mTable != null, "Table not specified");
     }
 
     public SelectionBuilder mapToTable(String column, String table) {
@@ -138,9 +140,10 @@ public class SelectionBuilder {
 
     @Override
     public String toString() {
-        return "SelectionBuilder[table=" + mTable + ", selection="
-                + getSelection() + ", selectionArgs="
-                + Arrays.toString(getSelectionArgs()) + "]";
+        return toStringHelper(this).add("table", mTable)
+                .add("selection", getSelection())
+                .add("selectionArgs", Arrays.toString(getSelectionArgs()))
+                .toString();
     }
 
     /**

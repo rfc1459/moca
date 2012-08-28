@@ -18,6 +18,9 @@
 
 package org.level28.android.moca.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,9 +52,7 @@ public class LruCache<K, V> {
      *            cache.
      */
     public LruCache(int maxSize) {
-        if (maxSize <= 0) {
-            throw new IllegalArgumentException("maxSize <= 0");
-        }
+        checkArgument(maxSize > 0, "maxSize <= 0");
         this.maxSize = maxSize;
         this.map = new LinkedHashMap<K, V>(0, 0.75f, true);
     }
@@ -63,9 +64,7 @@ public class LruCache<K, V> {
      * be created.
      */
     public final V get(K key) {
-        if (key == null) {
-            throw new NullPointerException("key == null");
-        }
+        checkNotNull(key, "key == null");
 
         V mapValue;
         synchronized (this) {
@@ -117,9 +116,8 @@ public class LruCache<K, V> {
      * @return the previous value mapped by {@code key}.
      */
     public V put(K key, V value) {
-        if (key == null || value == null) {
-            throw new NullPointerException("key == null || value == null");
-        }
+        checkNotNull(key, "key == null");
+        checkNotNull(value, "value == null");
 
         V previous;
         synchronized (this) {
@@ -176,9 +174,7 @@ public class LruCache<K, V> {
      * @return the previous value mapped by {@code key}.
      */
     public final V remove(K key) {
-        if (key == null) {
-            throw new NullPointerException("key == null");
-        }
+        checkNotNull(key, "key == null");
 
         V previous;
         synchronized (this) {

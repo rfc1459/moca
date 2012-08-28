@@ -18,6 +18,8 @@
 
 package org.level28.android.moca.bitmaps;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.level28.android.moca.BuildConfig;
 
 import android.graphics.Bitmap;
@@ -47,9 +49,7 @@ public class BitmapWrapper {
     }
 
     public BitmapWrapper(final String key, final Bitmap bitmap) {
-        if (bitmap == null) {
-            throw new IllegalArgumentException("bitmap cannot be null");
-        }
+        checkNotNull(bitmap, "bitmap may not be null");
 
         mBitmap = bitmap;
         mKey = key;

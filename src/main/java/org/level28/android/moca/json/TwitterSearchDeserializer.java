@@ -32,6 +32,7 @@ import org.level28.android.moca.model.Tweet;
 import org.level28.android.moca.model.TwitterSearchReply;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 
 /**
  * JSON deserializer for Twitter search results.
@@ -131,7 +132,7 @@ public final class TwitterSearchDeserializer extends
         reply.setPage(node.intValue());
 
         // Parse all results
-        ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+        ArrayList<Tweet> tweets = Lists.newArrayList();
         for (JsonNode child : resultsArray) {
             tweets.add(parseSingleTweet(child));
         }
